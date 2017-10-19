@@ -2,6 +2,7 @@
 {% block body %}
   <form action="{{ url_for('register') }}" method=post class="form-horizontal">
     <h2>Sign up for XXX Application </h2>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <div class="control-group">
         <div class="controls">
           <input type="text" id="username" name="username" class="input-xlarge"

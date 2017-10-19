@@ -2,6 +2,7 @@
 {% block body %}
   <form action="" method=post class="form-horizontal">
     <h2>Signin to XXX Application </h2>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <div class="control-group">
         <div class="controls">
           <input type="email" id="email" name="email" class="input-xlarge"
@@ -16,9 +17,15 @@
         </div>
     </div>
 
-     <div class="control-group">
+     <div class="control-group" style="float:left">
         <div class="controls">
-          <input type="checkbox" id="remember_me" name="remember_me"> Remember me
+          <input type="checkbox" id="remember_me" name="remember_me"> Remember me 
+        </div>
+    </div>
+
+    <div class="control-group">
+        <div class="controls" >
+          <a href="{{ url_for('view_reset_pass') }}"  style="margin-left:50px"> Forgot password</a>
         </div>
     </div>
 

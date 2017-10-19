@@ -9,3 +9,10 @@ class LoginForm(Form):
 class RegistrationForm(LoginForm):
 	password_repeat = PasswordField('Repeat password', validators=[DataRequired(), EqualTo('password')])
 	username = StringField('Username', validators=[DataRequired()])
+
+class RequestResetPassordForm(Form):
+    email = StringField('E-mail', validators=[Email(), DataRequired()])
+
+class ResetPassordForm(Form):
+    password = PasswordField('Password', validators=[DataRequired()])
+    password_repeat = PasswordField('Repeat password', validators=[DataRequired(), EqualTo('password')])
