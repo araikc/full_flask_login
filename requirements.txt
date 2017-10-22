@@ -1,0 +1,12 @@
+flask
+flask-debugtoolbar
+flask-login
+flask-sqlalchemy
+flask-mail
+flask-wtf
+wtforms
+flask-script
+flask-migrate
+flask-bcrypt
+itsdangerous
+
