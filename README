@@ -1,0 +1,7 @@
+Virtualenv directory
+virtualenv --no-site-packages --prompt="(<project_name>)" <venv_name>
+kill `cat ffl_gunicorn.pid`
+
+RUN
+/usr/local/etc/nginx/sites-enabled
+gunicorn app:app -p ffl_gunicorn.pid -D
