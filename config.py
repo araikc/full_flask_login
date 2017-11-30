@@ -6,6 +6,7 @@ class Config(object):
     CSRF_ENABLED = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG_TB_INTERCEPT_REDIRECTS = False
+    TEMPLATES_AUTO_RELOAD = True
 
 class ProductionConfig(Config):
     DEBUG = False
@@ -17,7 +18,7 @@ class ProductionConfig(Config):
     MAIL_PASSWORD = ''
 
 class DevelopConfig(Config):
-    DEBUG = True
+    DEBUG = False
     ASSETS_DEBUG = True
     MAIL_SERVER = "smtp.zoho.com"
     MAIL_PORT = 465

@@ -2,6 +2,21 @@ from . import db
 from datetime import datetime
 from flask_bcrypt import generate_password_hash, check_password_hash
 
+class Account(db.Model):
+    __tablename__ = 'accounts'
+
+    id = db.Column(db.Integer, primary_key=True)
+    #userId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    #user = db.relationship(User, backref='users')
+    balance = db.Column(db.Integer, nullable=False, default=0)
+    bitcoin = db.Column(db.Integer, nullable=True)
+    referralProgramId = db.Column(db.Integer, db.ForeignKey('referral_programs.id'), nullable=False)
+
+    def __init__(self, balance, bc, rpid):
+        self.balance = balance
+        self.bitcoin = bc
+        self.referralProgramId = rpid
+
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -14,7 +29,11 @@ class User(db.Model):
     confirmed_on = db.Column(db.DateTime, nullable=True)
     role = db.Column(db.String(20), nullable=False, default='user')
 
-    def __init__(self, username, password, email, confirmed=None, confirmed_on=None, role='user'):
+    accountId = db.Column(db.Integer, db.ForeignKey('accounts.id'), nullable=True)
+    account = db.relationship(Account, backref='accounts')
+
+    def __init__(self, username, password, email, confirmed=None, confirmed_on=None, role='user', accountId=None):
+        self.accountId = accountId
         self.username = username
         self.email = email
         self.password = User.hash_password(password)
@@ -45,18 +64,7 @@ class User(db.Model):
     def get_id(self):
         return str(self.id)
 
-class Account(db.Model):
-    __tablename__ = 'accounts'
 
-    id = db.Column(db.Integer, primary_key=True)
-    balance = db.Column(db.Integer, nullable=False, default=0)
-    bitcoin = db.Column(db.Integer, nullable=True)
-    referralProgramId = db.Column(db.Integer, db.ForeignKey('referral_programs.id'), nullable=False)
-
-    def __init__(self, balance, bc, rpid):
-        self.balance = balance
-        self.bitcoin = bc
-        self.referralProgramId = rpid
 
 class ReferralProgram(db.Model):
     __tablename__ = "referral_programs"
@@ -67,22 +75,6 @@ class ReferralProgram(db.Model):
 
     def __init__(self, name):
         self.name = name
-
-class UserAccount(db.Model):
-    __tablename__ = "user_account"
-
-    userId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, primary_key=True)
-    accountId = db.Column(db.Integer, db.ForeignKey('accounts.id'), nullable=False, primary_key=True)
-
-    def __init__(self, u, a):
-        self.userId = u
-        self.accountId = a
-
-    def get_accountId(self):
-        return self.accountId
-
-    def get_userId(self):
-        return self.userId
 
 class Transaction(db.Model):
     __tablename__ = "transactions"
@@ -122,16 +114,20 @@ class InvestmentPlan(db.Model):
         self.periodUnit = peru
         self.percentage = perc
         self.description = desc
+        
 
-class AccountInvestmentPlan(db.Model):
-    __tablename__ = "account_investment_plan"
+class AccountInvestments(db.Model):
+    __tablename__ = "account_investments"
 
     accountId = db.Column(db.Integer, db.ForeignKey('accounts.id'), nullable=False, primary_key=True)
     investmentPlanId = db.Column(db.Integer, db.ForeignKey('investment_plans.id'), nullable=False, primary_key=True)
+    investmentPlan = db.relationship(InvestmentPlan, backref='account_investments')
     startDatetime = db.Column(db.DateTime, nullable=False)
     endDatetime = db.Column(db.DateTime, nullable=False)
     currentBalance = db.Column(db.Integer, nullable=False)
     initialInvestment = db.Column(db.Integer, nullable=False)
+
+
 
 
 

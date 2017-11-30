@@ -37,11 +37,6 @@ def register():
 			db.session.add(account)
 			db.session.commit()
 
-			# UserAccount
-			ua = UserAccount(user.id, account.id)
-			db.session.add(ua)
-			db.session.commit()
-
 			token = generate_confirmation_token(user.email, app.config)
 			confirm_url = url_for('home.confirm_email', token=token, _external=True)
 			html = render_template('home/activate_email.html', confirm_url=confirm_url)

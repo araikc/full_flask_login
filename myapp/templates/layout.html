@@ -1,7 +1,8 @@
 {% from "macros.html" import nav_link with context %}
 <!doctype html>
 <title>XXX app</title>
-<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<!-- <meta name="viewport" content="initial-scale=1.0, user-scalable=no"> -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 <style>
@@ -37,8 +38,8 @@ body {
 						{% if not g.user.is_authenticated %}
 							{{ nav_link('home.login', "Login") }}
 							{{ nav_link('home.register', "Register") }}
+							{{ nav_link('home.index', "About Us") }}
 						{% endif %}
-						{{ nav_link('home.index', "About Us") }}
 					</ul>
 				</div>
 				<!--/.nav-collapse -->
@@ -58,6 +59,14 @@ body {
 		</div>
 	{% endif %}
 	{% endwith %}
+
+
+	<div class="row">
+		<div class="span6 offset6">
+			Balance: {{g.user.account.balance}} $-
+			BitCoin: {{g.user.account.bitcoin}}
+		</div> 
+	</div>
 
 	{% block body %}{% endblock %}
 	<hr>

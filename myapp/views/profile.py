@@ -14,6 +14,9 @@ def profile():
 @login_required
 @check_confirmed
 def dashboard():
-	from ..models import UserAccount
-	user_account = UserAccount.query.filter_by(userId=current_user.get_id()).first()
-	return render_template('profile/dashboard.html', accId=user_account.get_accountId())
+	from .. import db
+	from ..models import AccountInvestments
+	investments = AccountInvestments.query.filter_by(accountId=current_user.accountId).limit(5)
+	return render_template('profile/dashboard.html', 
+							accId=current_user.accountId,
+							accInvestments=investments)
