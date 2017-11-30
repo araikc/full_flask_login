@@ -6,8 +6,6 @@ class Account(db.Model):
     __tablename__ = 'accounts'
 
     id = db.Column(db.Integer, primary_key=True)
-    #userId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    #user = db.relationship(User, backref='users')
     balance = db.Column(db.Integer, nullable=False, default=0)
     bitcoin = db.Column(db.Integer, nullable=True)
     referralProgramId = db.Column(db.Integer, db.ForeignKey('referral_programs.id'), nullable=False)
@@ -21,7 +19,7 @@ class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), nullable=False, index=True)
+    username = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
     password = db.Column(db.String(255))
     registered_on = db.Column(db.DateTime, nullable=False)
@@ -115,18 +113,55 @@ class InvestmentPlan(db.Model):
         self.percentage = perc
         self.description = desc
         
+class PaymentSystems(db.Model):
+    __tablename__ = "payment_systems"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=True)
+    logo = db.Column(db.String(50), nullable=True)
+    url = db.Column(db.String(100), nullable=True)
 
 class AccountInvestments(db.Model):
     __tablename__ = "account_investments"
 
     accountId = db.Column(db.Integer, db.ForeignKey('accounts.id'), nullable=False, primary_key=True)
     investmentPlanId = db.Column(db.Integer, db.ForeignKey('investment_plans.id'), nullable=False, primary_key=True)
-    investmentPlan = db.relationship(InvestmentPlan, backref='account_investments')
-    startDatetime = db.Column(db.DateTime, nullable=False)
-    endDatetime = db.Column(db.DateTime, nullable=False)
+    investmentPlan = db.relationship(InvestmentPlan, backref='investment_plans')
+    startDatetime = db.Column(db.DateTime, nullable=True)
+    endDatetime = db.Column(db.DateTime, nullable=True)
     currentBalance = db.Column(db.Integer, nullable=False)
     initialInvestment = db.Column(db.Integer, nullable=False)
+    idActive = db.Column(db.Boolean, nullable=True, default=False)
+    paymentSystemId = db.Column(db.Integer, db.ForeignKey('payment_systems.id'), nullable=False)
+    paymentSystem = db.relationship(PaymentSystems, backref='payment_systems')
 
+    def __init__(self, accountId, investmentPlanId, 
+                currentBalance, 
+                initialInvestment, idActive, paymentSystemId, startDatetime=None, endDatetime=None):
+        self.accountId = accountId
+        self.investmentPlanId =investmentPlanId
+        self.startDatetime = startDatetime
+        self.endDatetime = endDatetime
+        self.currentBalance = currentBalance
+        self.initialInvestment = initialInvestment
+        self.idActive = idActive
+        self.paymentSystemId = paymentSystemId
+
+
+
+class Wallet(db.Model):
+    __tablename__ = "wallet"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=True)
+
+class AccountWallets(db.Model):
+    __tablename__ = "account_wallets"
+
+    accountId = db.Column(db.Integer, db.ForeignKey('accounts.id'), nullable=False, primary_key=True)
+    walletId = db.Column(db.Integer, db.ForeignKey('wallet.id'), nullable=False, primary_key=True)
+    wallet = db.relationship(Wallet, backref='wallet')
+    walletValue = db.Column(db.String(100), nullable=True)
 
 
 

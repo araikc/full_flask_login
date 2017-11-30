@@ -27,7 +27,7 @@ class DevelopConfig(Config):
     MAIL_USERNAME = ''
     MAIL_PASSWORD = ''
     MAIL_USERNAME = 'info@clickbuzzmedia.com'
-    MAIL_PASSWORD = 'Info9090'
+    MAIL_PASSWORD = 'InfoCBM9@9@'
     WTF_CSRF_SECRET_KEY = '12j1j1lk31k2312313'
     SECRET_KEY = '\x01\xc8$\x97\xd9\x1a\x13\xd9\x9eE\xabS\xc8\x17\xa4\xc3\x14\xe8Re\x94\x8cKR'
     SQLALCHEMY_DATABASE_URI = 'mysql://root:root@127.0.0.1/hpdb'

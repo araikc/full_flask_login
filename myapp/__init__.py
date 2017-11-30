@@ -48,6 +48,19 @@ def load_user(user_id):
 def before_request():
     g.user = current_user
 
+@app.context_processor
+def inject_finance():
+	from models import AccountInvestments
+	if current_user.is_authenticated:
+		investments = AccountInvestments.query.filter_by(accountId=current_user.accountId).all()
+		inv = 0
+		ern = 0
+		for i in investments:
+			inv += i.initialInvestment
+			ern += i.initialInvestment - i.currentBalance
+		return dict(g_investment=inv, g_earning=ern)
+	return dict()
+
 # register views
 app.register_blueprint(home)
 app.register_blueprint(userprofile)

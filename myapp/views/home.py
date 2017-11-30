@@ -32,9 +32,10 @@ def register():
 
 			# Account User
 			account = Account(0, 0, rp.id)
-			user = User(form.username.data, form.password.data, form.email.data)
-			db.session.add(user)
 			db.session.add(account)
+			db.session.commit()
+			user = User(username=form.username.data, password=form.password.data, email=form.email.data, accountId=account.id)
+			db.session.add(user)
 			db.session.commit()
 
 			token = generate_confirmation_token(user.email, app.config)
@@ -99,6 +100,7 @@ def confirm_email(token):
 
 @home.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
+	from .. import app
 	email = None
 	try:
 	    email = confirm_token(token=token, config=app.config)
@@ -111,6 +113,7 @@ def reset_password(token):
 def send_reset_pass():
 	from ..lib.email2 import send_email
 	from ..models import User
+	from .. import app
 	form = RequestResetPassordForm(request.form)
 	if request.method == 'POST' and form.validate():
 		user = User.query.filter_by(email=form.email.data).first()
@@ -130,6 +133,7 @@ def send_reset_pass():
 def save_reset_pass():
 	from ..lib.email2 import send_email
 	from ..models import User
+	from .. import app
 	form = ResetPassordForm(request.form)
 	if form.validate():
 		user = User.query.filter_by(email=request.form['email']).first()
@@ -149,6 +153,7 @@ def save_reset_pass():
 @home.route('/resend')
 @login_required
 def resend_confirmation():
+	from .. import app
 	from ..lib.email2 import send_email
 	token = generate_confirmation_token(current_user.email, app.config)
 	confirm_url = url_for('home.confirm_email', token=token, _external=True)

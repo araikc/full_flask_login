@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<form action="{{ url_for('userprofile.depost_confirmation') }}" method=post class="form-horizontal"> 
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+<input type="hidden" name="accWalletsLength" value="{{ accWalletsLength }}"/>
+<div class="block" style="border:1px">
+	<div class="row">
+		<div class="span4">
+			<h4>Select Payment System</h4>
+			{% for ps in  paymentSystems %}
+			<label class="radio">
+				<input type="radio" name="paymentSystemId" id="{{ps.id}}" value="{{ps.id}}">
+				{{ps.name}}
+			</label>
+			{% endfor %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="span4">
+			<h4>Amount</h4>
+			<input name="amount" id="amount" value="{{ request.form.amount }}" type="text">
+		</div>
+	</div>
+	<div class="row">
+		<div class="span4">
+			<h4>Select deposit plan</h4>
+			{% for ip in  invPlans %}
+			<label class="radio">
+				<input type="radio" name="invPlanId" id="{{ip.id}}" value="{{ip.id}}">
+				{{ip.description}}
+			</label>
+			{% endfor %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="span3 offset4">
+			<button type="submit" class="btn btn-success btn-large">Invest</button>
+		</div>
+	</div>
+
+</div>
+</form>
+
+{% endblock %}
