@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_login import login_user, logout_user, login_required, current_user
 from ..forms import LoginForm, RegistrationForm, RequestResetPassordForm, ResetPassordForm
 from datetime import datetime
 from ..lib.token2 import generate_confirmation_token, confirm_token
 from ..lib.decorators import check_confirmed
+from datetime import datetime
 
 home = Blueprint('home', __name__)
 
@@ -12,30 +13,49 @@ def index():
 	if current_user.is_authenticated:
 		return redirect(url_for('userprofile.dashboard'))
 	else:
+		ref = request.args.get('ref')
+		if ref != None:
+			session['referral'] = ref
 		return render_template('home/index.html')
 
 @home.route('/register' , methods=['GET','POST'])
 def register():
+	#if 'referral' in session:
+	#	print session['referral']
 	from .. import app, db
 	from ..lib.email2 import send_email
 	from ..models import *
 	if request.method == 'GET':
-	    return render_template('home/register.html')
+		referral = None
+		if 'referral' in session:
+			referral = session['referral']
+		return render_template('home/register.html', referral=referral)
 	form = RegistrationForm(request.form)
 	if form.validate:
 		cur = User.query.filter_by(email=form.email.data).first()
 		if cur is None:
-			# refereal program
-			rp = ReferralProgram("521")
-			db.session.add(rp)
-			db.session.commit()
+
+			# refereal program 521
+			rp = ReferralProgram.query.filter_by(id=1).first()
 
 			# Account User
-			account = Account(0, 0, rp.id)
+			account = Account(0, 0)
+			account.referralProgram = rp
 			db.session.add(account)
-			db.session.commit()
-			user = User(username=form.username.data, password=form.password.data, email=form.email.data, accountId=account.id)
+			#db.session.commit()
+
+			user = User(username=form.username.data, password=form.password.data, email=form.email.data)
+			user.account = account
 			db.session.add(user)
+			#db.session.commit()
+
+			# referral account
+			if 'referral' in session:
+				refUser = User.query.filter_by(email=session['referral']).first()
+				if refUser:
+					referral = Referral(refUser.account.id)
+					referral.referralAccount = account
+
 			db.session.commit()
 
 			token = generate_confirmation_token(user.email, app.config)
@@ -51,9 +71,15 @@ def register():
 			flash('User with specified email already exists in a system', 'warning')
 	return render_template('home/register.html')
  
+
+
+
 @home.route('/login',methods=['GET','POST'])
 def login():
+	from .. import db
 	from ..models import User
+	from ..models import Transaction
+	from ..models import TransactionType
 	if request.method == 'GET':
 	    return render_template('home/login.html')
 	form = LoginForm(request.form)
@@ -65,10 +91,26 @@ def login():
 		    remember_me = True
 		user = User.query.filter_by(email=email).first()
 		if user is None or not user.check_password(password):
-		    flash('Username or Password is invalid' , 'error')
-		    return redirect(url_for('home.login'))
+			flash('Username or Password is invalid' , 'error')
+			login_act = Transaction(
+							date=datetime.now(),
+							amount=None,
+							status=0)
+			login_act.account = current_user.account
+			login_act.transactionType = TransactionType.query.filter_by(id=1).first()
+			db.session.add(login_act)
+			db.session.commit()
+			return redirect(url_for('home.login'))
 		login_user(user, remember = remember_me)
 		flash('Logged in successfully')
+		login_act = Transaction(
+								date=datetime.now(),
+								amount=None,
+								status=1)
+		login_act.account = current_user.account
+		login_act.transactionType = TransactionType.query.filter_by(id=1).first()
+		db.session.add(login_act)
+		db.session.commit()
 		return redirect(request.args.get('next') or url_for('userprofile.dashboard'))
 	flash('Please check your inputs' , 'error')
 	return redirect(url_for('home.login'))
@@ -133,13 +175,18 @@ def send_reset_pass():
 def save_reset_pass():
 	from ..lib.email2 import send_email
 	from ..models import User
-	from .. import app
+	from ..models import Transaction
+	from ..models import TransactionType
+	from .. import app, db
 	form = ResetPassordForm(request.form)
 	if form.validate():
 		user = User.query.filter_by(email=request.form['email']).first()
 		if user:
 			user.password = User.hash_password(form.password.data)
 			db.session.add(user)
+			tr = Transaction(datetime.now(), None, 1)
+			tr.TransactionType = TransactionType.query.filter_by(id=6).first()
+			db.session.add(tr)
 			db.session.commit()
 			html = 'Thank you! You have successfully reset your password.'
 			subject = "Reset password"
@@ -166,8 +213,20 @@ def resend_confirmation():
 @home.route('/logout')
 @login_required
 def logout():
-    logout_user()
-    return redirect(url_for('home.index')) 
+	from .. import db
+	from ..models import Transaction
+	from ..models import TransactionType
+	trType = TransactionType.query.filter_by(id=2).first()
+	logout_act = Transaction(
+							date=datetime.now(),
+							amount=None,
+							status=1)
+	logout_act.account = current_user.account
+	logout_act.transactionType = trType
+	db.session.add(logout_act)
+	db.session.commit()
+	logout_user()
+	return redirect(url_for('home.index')) 
 
 @home.route('/unconfirmed')
 @login_required

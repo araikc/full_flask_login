@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="row">
+	<h1>Activities</h1>
+</div>
+
+<div class="row">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>DateTime</th>
+				<th>Activity</th>
+				<th>Status</th>
+			</tr>
+		</thead>
+	{% for act in acts %}
+		<tr>
+			<td>{{ act.execDatetime }}</td>
+			<td>{{ act.transactionType.name }}</td>
+			<td>{{ act.status }}</td>
+		</tr>
+	{% endfor %}
+	</table>
+</div>
+
+{% endblock %}

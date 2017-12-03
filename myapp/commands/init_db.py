@@ -4,8 +4,15 @@ from flask import current_app
 from flask_script import Command
 
 from myapp import db
-#from app.models.user_models import User, Role
 from myapp.models import User
+from myapp.models import Account
+from myapp.models import ReferralProgram
+from myapp.models import Wallet
+from myapp.models import PaymentSystems
+from myapp.models import InvestmentPlan
+from myapp.models import AccountWallets
+from myapp.models import TransactionType
+
 
 
 class InitDbCommand(Command):
@@ -18,42 +25,86 @@ def init_db():
     """ Initialize the database."""
     db.drop_all()
     db.create_all()
-    #create_users()
+    create_admin_users()
 
 
-def create_users():
+def create_admin_users():
     """ Create users """
 
-    # Create all tables
-    db.create_all()
+    refProg, wallet = craete_utils()
 
-    # Adding roles
-    #admin_role = find_or_create_role('admin', u'Admin')
+    account = create_account(refProg)
 
     # Add users
-    #user = find_or_create_user(u'Admin', u'Example', u'admin@example.com', 'Password1', admin_role)
-    user = find_or_create_user(u'araikc', u'alalo', u'araikc@gmail.com')
+    user = create_user(account)
 
-    # Save to DB
+    aw = AccountWallets("url")
+    aw.account = account
+    aw.wallet = wallet
+    db.session.add(aw)
+
     db.session.commit()
 
 
-def find_or_create_role(name, label):
-    """ Find existing role or create new role """
-    role = Role.query.filter(Role.name == name).first()
-    if not role:
-        role = Role(name=name, label=label)
-        db.session.add(role)
-    return role
+def create_account(rp):
+    # Account User
+    account = Account(0, 0)
+    account.referralProgram = rp
+    db.session.add(account)
+    #db.session.commit()
+    return account
 
 
-def find_or_create_user(uname, password, email):
+def create_user(account):
     """ Find existing user or create new user """
-    user = User.query.filter(User.email == email).first()
-    if not user:
-        user = User(username=uname,
-                    password=password,
-                    email=email)
-        db.session.add(user)
+    user = User(username=u'araikc', password=u'alalo', 
+                               email=u'araikc@gmail.com', role='admin',
+                               confirmed=1)
+    user.account = account
+    db.session.add(user)
+    #db.session.commit()
     return user
+
+def craete_utils():
+
+    # refereal program
+    rp = ReferralProgram("521")
+    db.session.add(rp)
+    rp1 = ReferralProgram("731")
+    db.session.add(rp1)
+    #db.session.commit()
+
+    wallet = Wallet("TestWallet", "url")
+    db.session.add(wallet)
+    #db.session.commit()
+
+    ps = PaymentSystems("Perfect money", "logo", "url")
+    db.session.add(ps)
+    ps = PaymentSystems("BitCoint", "logo", "url")
+    db.session.add(ps)
+    #db.session.commit()
+
+    ip = InvestmentPlan(8, 1, 8, "8% per day")
+    ip1 = InvestmentPlan(14, 0, 115, "115% after 14 days")
+    db.session.add(ip)
+    db.session.add(ip1)
+    #db.session.commit()
+
+    tr = TransactionType("Login")
+    db.session.add(tr)
+    tr = TransactionType("Logout")
+    db.session.add(tr)
+    tr = TransactionType("Request deposit")
+    db.session.add(tr)
+    tr = TransactionType("Re-invest")
+    db.session.add(tr)
+    tr = TransactionType("Withdraw")
+    db.session.add(tr)
+    tr = TransactionType("Reset password")
+    db.session.add(tr)
+    tr = TransactionType("Change settings")
+    db.session.add(tr)
+    #db.session.commit()
+
+    return rp, wallet
 

@@ -2,18 +2,6 @@ from . import db
 from datetime import datetime
 from flask_bcrypt import generate_password_hash, check_password_hash
 
-class Account(db.Model):
-    __tablename__ = 'accounts'
-
-    id = db.Column(db.Integer, primary_key=True)
-    balance = db.Column(db.Integer, nullable=False, default=0)
-    bitcoin = db.Column(db.Integer, nullable=True)
-    referralProgramId = db.Column(db.Integer, db.ForeignKey('referral_programs.id'), nullable=False)
-
-    def __init__(self, balance, bc, rpid):
-        self.balance = balance
-        self.bitcoin = bc
-        self.referralProgramId = rpid
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -27,11 +15,10 @@ class User(db.Model):
     confirmed_on = db.Column(db.DateTime, nullable=True)
     role = db.Column(db.String(20), nullable=False, default='user')
 
-    accountId = db.Column(db.Integer, db.ForeignKey('accounts.id'), nullable=True)
-    account = db.relationship(Account, backref='accounts')
+    ####
+    account = db.relationship('Account', backref='user', uselist=False)
 
-    def __init__(self, username, password, email, confirmed=None, confirmed_on=None, role='user', accountId=None):
-        self.accountId = accountId
+    def __init__(self, username, password, email, confirmed=None, confirmed_on=None, role='user'):
         self.username = username
         self.email = email
         self.password = User.hash_password(password)
@@ -62,7 +49,24 @@ class User(db.Model):
     def get_id(self):
         return str(self.id)
 
+class Account(db.Model):
+    __tablename__ = 'accounts'
 
+    id = db.Column(db.Integer, primary_key=True)
+    balance = db.Column(db.Integer, nullable=False, default=0)
+    bitcoin = db.Column(db.Integer, nullable=True)
+    
+    referralProgramId = db.Column(db.Integer, db.ForeignKey('referral_programs.id'), nullable=False)
+    userId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    wallets = db.relationship('AccountWallets', backref='account', lazy='dynamic')
+    referrals = db.relationship('Referral', backref='referralAccount', lazy='dynamic')
+    investments = db.relationship('AccountInvestments', backref='account', lazy='dynamic')
+    transactions = db.relationship('Transaction', backref='account', lazy='dynamic')
+
+    def __init__(self, balance, bc):
+        self.balance = balance
+        self.bitcoin = bc
 
 class ReferralProgram(db.Model):
     __tablename__ = "referral_programs"
@@ -70,6 +74,19 @@ class ReferralProgram(db.Model):
     # 1 - 5/2/1, 2 - 7/3/1 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=False)
+
+    accounts = db.relationship('Account', backref='referralProgram', lazy='dynamic')
+
+    def __init__(self, name):
+        self.name = name
+
+class TransactionType(db.Model):
+    __tablename__ = "transaction_types"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30), default="")
+
+    transactions = db.relationship('Transaction', backref='transactionType', lazy='dynamic')
 
     def __init__(self, name):
         self.name = name
@@ -79,23 +96,30 @@ class Transaction(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     accountId = db.Column(db.Integer, db.ForeignKey('accounts.id'), nullable=False)
+    
     execDatetime = db.Column(db.DateTime, nullable=False)
+    
     transactionTypeId = db.Column(db.Integer, db.ForeignKey('transaction_types.id'), nullable=False)
+    
     amount = db.Column(db.Float, nullable=True)
+    status = db.Column(db.Boolean, nullable=False, default=False)
 
-class TransactionType(db.Model):
-    __tablename__ = "transaction_types"
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30), default="")
+    def __init__(self, date, amount, status):
+        self.execDatetime = date
+        self.amount = amount
+        self.status = status
 
 class Referral(db.Model):
     __tablename__ = "referrals"
 
-    userId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, primary_key=True)
-    refUserId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, primary_key=True)
-    level = db.Column(db.Integer, nullable=False)
-    percentage = db.Column(db.Integer, nullable=False)
+    #id = db.Column(db.Integer, primary_key=True)
+    accountId = db.Column(db.Integer, nullable=False, primary_key=True)
+    refAccId = db.Column(db.Integer, db.ForeignKey('accounts.id'), nullable=False, primary_key=True)
+
+    #level = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, accountId):
+        self.accountId = accountId
 
 class InvestmentPlan(db.Model):
     __tablename__ = "investment_plans"
@@ -106,6 +130,8 @@ class InvestmentPlan(db.Model):
     periodUnit = db.Column(db.Integer, nullable=False)
     percentage = db.Column(db.Integer, nullable=False)
     description = db.Column(db.String(50), nullable=True)
+
+    acountInvestments = db.relationship('AccountInvestments', backref='investmentPlan', lazy='dynamic')
 
     def __init__(self, per, peru, perc, desc):
         self.period = per
@@ -121,47 +147,62 @@ class PaymentSystems(db.Model):
     logo = db.Column(db.String(50), nullable=True)
     url = db.Column(db.String(100), nullable=True)
 
+    acountInvestments = db.relationship('AccountInvestments', backref='paymentSystem', lazy='dynamic')
+
+    def __init__(self, name, logo, url):
+        self.name = name
+        self.logo = logo
+        self.url = url
+
 class AccountInvestments(db.Model):
     __tablename__ = "account_investments"
 
-    accountId = db.Column(db.Integer, db.ForeignKey('accounts.id'), nullable=False, primary_key=True)
-    investmentPlanId = db.Column(db.Integer, db.ForeignKey('investment_plans.id'), nullable=False, primary_key=True)
-    investmentPlan = db.relationship(InvestmentPlan, backref='investment_plans')
+    id = db.Column(db.Integer, primary_key=True)
+    accountId = db.Column(db.Integer, db.ForeignKey('accounts.id'), nullable=False)
+    
+    investmentPlanId = db.Column(db.Integer, db.ForeignKey('investment_plans.id'), nullable=False)
+    #investmentPlan = db.relationship(InvestmentPlan, backref='investment_plans')
+    
     startDatetime = db.Column(db.DateTime, nullable=True)
     endDatetime = db.Column(db.DateTime, nullable=True)
     currentBalance = db.Column(db.Integer, nullable=False)
     initialInvestment = db.Column(db.Integer, nullable=False)
     idActive = db.Column(db.Boolean, nullable=True, default=False)
     paymentSystemId = db.Column(db.Integer, db.ForeignKey('payment_systems.id'), nullable=False)
-    paymentSystem = db.relationship(PaymentSystems, backref='payment_systems')
+    #paymentSystem = db.relationship(PaymentSystems, backref='payment_systems')
 
-    def __init__(self, accountId, investmentPlanId, 
+    def __init__(self, 
                 currentBalance, 
-                initialInvestment, idActive, paymentSystemId, startDatetime=None, endDatetime=None):
-        self.accountId = accountId
-        self.investmentPlanId =investmentPlanId
+                initialInvestment, idActive, startDatetime=None, endDatetime=None):
         self.startDatetime = startDatetime
         self.endDatetime = endDatetime
         self.currentBalance = currentBalance
         self.initialInvestment = initialInvestment
         self.idActive = idActive
-        self.paymentSystemId = paymentSystemId
-
-
 
 class Wallet(db.Model):
     __tablename__ = "wallet"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=True)
+    name = db.Column(db.String(30), nullable=True)
+    url = db.Column(db.String(70), nullable=True)
+
+    accounts =  db.relationship('AccountWallets', backref='wallet', lazy='dynamic')
+
+    def __init__(self, name, url):
+        self.name = name
+        self.url = url
 
 class AccountWallets(db.Model):
     __tablename__ = "account_wallets"
 
     accountId = db.Column(db.Integer, db.ForeignKey('accounts.id'), nullable=False, primary_key=True)
     walletId = db.Column(db.Integer, db.ForeignKey('wallet.id'), nullable=False, primary_key=True)
-    wallet = db.relationship(Wallet, backref='wallet')
+    #wallet = db.relationship(Wallet, backref='wallet')
     walletValue = db.Column(db.String(100), nullable=True)
+
+    def __init__(self, value):
+        self.walletValue = value
 
 
 

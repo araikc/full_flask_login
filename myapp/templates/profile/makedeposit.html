@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<form action="{{ url_for('userprofile.depost_confirmation') }}" method=post class="form-horizontal"> 
+<form action="{{ url_for('userprofile.deposit_confirmation') }}" method=post class="form-horizontal"> 
 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 <input type="hidden" name="accWalletsLength" value="{{ accWalletsLength }}"/>
 <div class="block" style="border:1px">
@@ -10,7 +10,7 @@
 			<h4>Select Payment System</h4>
 			{% for ps in  paymentSystems %}
 			<label class="radio">
-				<input type="radio" name="paymentSystemId" id="{{ps.id}}" value="{{ps.id}}">
+				<input type="radio" name="paymentSystemId" id="{{ps.id}}" value="{{ps.id}}" required>
 				{{ps.name}}
 			</label>
 			{% endfor %}
@@ -19,7 +19,7 @@
 	<div class="row">
 		<div class="span4">
 			<h4>Amount</h4>
-			<input name="amount" id="amount" value="{{ request.form.amount }}" type="text">
+			<input name="amount" id="amount" value="{{ request.form.amount }}" type="text" required>
 		</div>
 	</div>
 	<div class="row">
@@ -27,7 +27,7 @@
 			<h4>Select deposit plan</h4>
 			{% for ip in  invPlans %}
 			<label class="radio">
-				<input type="radio" name="invPlanId" id="{{ip.id}}" value="{{ip.id}}">
+				<input type="radio" name="invPlanId" id="{{ip.id}}" value="{{ip.id}}" required>
 				{{ip.description}}
 			</label>
 			{% endfor %}

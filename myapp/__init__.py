@@ -52,12 +52,12 @@ def before_request():
 def inject_finance():
 	from models import AccountInvestments
 	if current_user.is_authenticated:
-		investments = AccountInvestments.query.filter_by(accountId=current_user.accountId).all()
+		investments = AccountInvestments.query.filter_by(accountId=current_user.account.id).all()
 		inv = 0
 		ern = 0
 		for i in investments:
 			inv += i.initialInvestment
-			ern += i.initialInvestment - i.currentBalance
+			ern += i.currentBalance - i.initialInvestment
 		return dict(g_investment=inv, g_earning=ern)
 	return dict()
 

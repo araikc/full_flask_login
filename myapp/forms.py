@@ -7,8 +7,9 @@ class LoginForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
 
 class RegistrationForm(LoginForm):
-	password_repeat = PasswordField('Repeat password', validators=[DataRequired(), EqualTo('password')])
-	username = StringField('Username', validators=[DataRequired()])
+    password_repeat = PasswordField('Repeat password', validators=[DataRequired(), EqualTo('password')])
+    username = StringField('Username', validators=[DataRequired()])
+    refemail = StringField('Referral e-mail', validators=[Email()])
 
 class RequestResetPassordForm(Form):
     email = StringField('E-mail', validators=[Email(), DataRequired()])
@@ -18,7 +19,7 @@ class ResetPassordForm(Form):
     password_repeat = PasswordField('Repeat password', validators=[DataRequired(), EqualTo('password')])
 
 class DepositForm(Form):
-    paymentSystemId = RadioField('paymentSystemId', validators=[DataRequired()])
+    paymentSystemId = StringField('paymentSystemId', validators=[DataRequired()])
     amount = StringField('amount', validators=[DataRequired()])
-    invPlanId = RadioField('invPlanId', validators=[DataRequired()])
+    invPlanId = StringField('invPlanId', validators=[DataRequired()])
     accWalletsLength = StringField('accWalletsLength', validators=[DataRequired()])
