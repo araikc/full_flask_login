@@ -39,8 +39,7 @@
     <div class="control-group">
         <div class="controls">
           <input type="email" id="refemail" name="refemail" class="input-xlarge"
-            placeholder="Enter Referral email" value="{{referral}}"
-            required>
+            placeholder="Referral email" value="{% if referral %} {{referral}} {% endif  %}">
         </div>
     </div>
 

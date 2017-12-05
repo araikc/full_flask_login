@@ -47,6 +47,7 @@ def deposit_confirmation():
 	from ..models import InvestmentPlan
 	from ..models import PaymentSystems
 	from ..models import AccountInvestments
+	
 
 	form = DepositForm(request.form)
 	if form.validate():
@@ -56,19 +57,25 @@ def deposit_confirmation():
 		else:
 			from .. import db
 			from ..models import Transaction
+			from ..models import TransactionType
+			from ..models import ReferralBonuses
+			trType = TransactionType.query.filter_by(id=3).first()
 			paymentSystemId = form.paymentSystemId.data
 			ps = PaymentSystems.query.get(paymentSystemId)
 			amount = form.amount.data
 			invPlanId = form.invPlanId.data
 			ip = InvestmentPlan.query.get(invPlanId)
+
+			# add activity
 			dep_act = Transaction(
 									date=datetime.now(),
 									amount=amount,
 									status=0)
 			dep_act.account = current_user.account
-			dep_act.transactionType = TransactionType.query.filter_by(id=3).first()
+			dep_act.transactionType = trType
 			db.session.add(dep_act)
 
+			# add investment
 			accInv = AccountInvestments(
 										currentBalance=amount,
 										initialInvestment=amount,
@@ -77,14 +84,19 @@ def deposit_confirmation():
 			accInv.paymentSystem = ps
 			accInv.investmentPlan = ip
 			db.session.add(accInv)
-			
+
+			# add referral bonusess
+			#refBon = ReferralBonuses(current_user.account.id, amount, )
+
+
+			# add activity
 			dep_act = Transaction(
 									date=datetime.now(),
 									amount=amount,
 									status=1)
 
 			dep_act.account = current_user.account
-			dep_act.transactionType = TransactionType.query.filter_by(id=3).first()
+			dep_act.transactionType = trType
 			db.session.add(dep_act)
 			db.session.commit()
 
@@ -122,4 +134,44 @@ def activity():
 	return render_template('profile/activity.html', 
 							accId=current_user.account.id,
 							acts=acts)
+
+
+@userprofile.route('/referrals')
+@login_required
+@check_confirmed
+def referrals():
+	from .. import db
+	from ..models import Referral
+	from ..models import AccountInvestments
+
+	for rb in current_user.account.referralBonuses:
+		print rb.invester_account_id
+
+	referrals = []
+	frefs = Referral.query.filter_by(accountId=current_user.account.id).all()
+	srefs = []
+	for fr in frefs:
+		srefs.extend(Referral.query.filter_by(accountId=fr.refAccId).all())
+	trefs = []
+	for sr in srefs:
+		trefs.extend(Referral.query.filter_by(accountId=sr.refAccId).all())
+	#referrals.extend(frefs)
+	#referrals.extend(srefs)
+
+	data = []
+
+	for ref in frefs:
+		investments = ref.referralAccount.investments
+		inv, ern = 0, 0
+		for i in investments:
+			inv += i.initialInvestment
+		ern = inv / 100 * 5
+		data.append({'username': ref.referralAccount.user.username, 
+					 'investments': inv,
+					 'earned': ern,
+					 'level' : 1})
+
+	return render_template('profile/referrals.html', 
+							referrals=data)
+
 

@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from ..forms import LoginForm, RegistrationForm, RequestResetPassordForm, ResetPassordForm
 from datetime import datetime
 from ..lib.token2 import generate_confirmation_token, confirm_token
-from ..lib.decorators import check_confirmed
+from ..lib.decorators import check_confirmed, logout_required
 from datetime import datetime
 
 home = Blueprint('home', __name__)
@@ -19,6 +19,7 @@ def index():
 		return render_template('home/index.html')
 
 @home.route('/register' , methods=['GET','POST'])
+@logout_required
 def register():
 	#if 'referral' in session:
 	#	print session['referral']
@@ -33,6 +34,8 @@ def register():
 	form = RegistrationForm(request.form)
 	if form.validate:
 		cur = User.query.filter_by(email=form.email.data).first()
+		refUser = None
+
 		if cur is None:
 
 			# refereal program 521
@@ -50,11 +53,12 @@ def register():
 			#db.session.commit()
 
 			# referral account
-			if 'referral' in session:
-				refUser = User.query.filter_by(email=session['referral']).first()
+			if form.refemail.data:
+				refUser = User.query.filter_by(email=form.refemail.data).first()
 				if refUser:
 					referral = Referral(refUser.account.id)
 					referral.referralAccount = account
+					db.session.add(referral)
 
 			db.session.commit()
 
@@ -72,9 +76,8 @@ def register():
 	return render_template('home/register.html')
  
 
-
-
 @home.route('/login',methods=['GET','POST'])
+@logout_required
 def login():
 	from .. import db
 	from ..models import User
@@ -90,16 +93,18 @@ def login():
 		if 'remember_me' in request.form:
 		    remember_me = True
 		user = User.query.filter_by(email=email).first()
+		tr = TransactionType.query.filter_by(id=1).first()
 		if user is None or not user.check_password(password):
 			flash('Username or Password is invalid' , 'error')
-			login_act = Transaction(
-							date=datetime.now(),
-							amount=None,
-							status=0)
-			login_act.account = current_user.account
-			login_act.transactionType = TransactionType.query.filter_by(id=1).first()
-			db.session.add(login_act)
-			db.session.commit()
+			if user:
+				login_act = Transaction(
+								date=datetime.now(),
+								amount=None,
+								status=0)
+				login_act.account = user.account
+				login_act.transactionType = tr
+				db.session.add(login_act)
+				db.session.commit()
 			return redirect(url_for('home.login'))
 		login_user(user, remember = remember_me)
 		flash('Logged in successfully')
@@ -108,7 +113,7 @@ def login():
 								amount=None,
 								status=1)
 		login_act.account = current_user.account
-		login_act.transactionType = TransactionType.query.filter_by(id=1).first()
+		login_act.transactionType = tr
 		db.session.add(login_act)
 		db.session.commit()
 		return redirect(request.args.get('next') or url_for('userprofile.dashboard'))

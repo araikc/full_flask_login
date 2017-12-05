@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="row">
+	<h1>Referral system</h1>
+</div>
+
+<div class="row">
+	<div>
+		<p><h4>YOUR REFERRAL LINK</h4> </p><input type="text" id="js-copyInput" value="{{request.host_url}}?ref={{current_user.email}}" readonly="" style="float:left">
+		<button class="btn btn-success btn-small" onClick="copyToClip()">Copy</button>
+	</div>
+</div>
+<div class="row">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Username</th>
+				<th>Investments</th>
+				<th>Earned</th>
+				<th>Level</th>
+			</tr>
+		</thead>
+	{% for ref in referrals %}
+		<tr>
+			<td>{{ ref.username }}</td>
+			<td>{{ ref.investments }}</td>
+			<td>{{ ref.earned }}</td>
+			<td>{{ ref.level }}</td>
+		</tr>
+	{% endfor %}
+	</table>
+</div>
+
+{% endblock %}

@@ -7,6 +7,7 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG_TB_INTERCEPT_REDIRECTS = False
     TEMPLATES_AUTO_RELOAD = True
+    SESSION_TIMEOUT = 30
 
 class ProductionConfig(Config):
     DEBUG = False

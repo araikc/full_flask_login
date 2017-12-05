@@ -63,10 +63,12 @@ class Account(db.Model):
     referrals = db.relationship('Referral', backref='referralAccount', lazy='dynamic')
     investments = db.relationship('AccountInvestments', backref='account', lazy='dynamic')
     transactions = db.relationship('Transaction', backref='account', lazy='dynamic')
+    referralBonuses = db.relationship('ReferralBonuses', backref='earnedAccount', lazy='dynamic')
 
     def __init__(self, balance, bc):
         self.balance = balance
         self.bitcoin = bc
+
 
 class ReferralProgram(db.Model):
     __tablename__ = "referral_programs"
@@ -203,6 +205,23 @@ class AccountWallets(db.Model):
 
     def __init__(self, value):
         self.walletValue = value
+
+class ReferralBonuses(db.Model):
+    __tablename__ = "referral_bonuses"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    invester_account_id = db.Column(db.Integer, nullable=False)
+    earned_account_id = db.Column(db.Integer, db.ForeignKey('accounts.id'), nullable=False, index=True)
+    invested_amount = db.Column(db.Float, nullable=False)
+    earned_amount = db.Column(db.Float, nullable=False)
+    level = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, invAccId, amount, earned, level):
+        self.invester_account_id = invAccId
+        self.invested_amount = amounts
+        self.earned_amount = earned
+        self.level = level
 
 
 

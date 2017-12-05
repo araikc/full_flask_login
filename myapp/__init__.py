@@ -1,5 +1,5 @@
 
-from flask import Flask, g
+from flask import Flask, g, session
 from flask_admin import Admin
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_login import LoginManager, current_user
@@ -10,6 +10,8 @@ from werkzeug.contrib.fixers import ProxyFix
 from .views.home import home
 from .views.profile import userprofile
 from .views.admin import MyAdminIndexView, AdminModelView
+
+import datetime
 
 app = Flask(__name__)
 admin = Admin(app, index_view=MyAdminIndexView(), base_template='admin/my_master.html', template_mode='bootstrap3')
@@ -46,7 +48,10 @@ def load_user(user_id):
 
 @app.before_request
 def before_request():
-    g.user = current_user
+	session.permanent = True
+	app.permanent_session_lifetime = datetime.timedelta(minutes=app.config['SESSION_TIMEOUT'])
+	session.modified = True
+	g.user = current_user
 
 @app.context_processor
 def inject_finance():
