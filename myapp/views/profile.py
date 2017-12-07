@@ -57,6 +57,7 @@ def deposit_confirmation():
 		else:
 			from .. import db
 			from ..models import Transaction
+			from ..models import Account
 			from ..models import TransactionType
 			from ..models import ReferralBonuses
 			trType = TransactionType.query.filter_by(id=3).first()
@@ -86,8 +87,30 @@ def deposit_confirmation():
 			db.session.add(accInv)
 
 			# add referral bonusess
-			#refBon = ReferralBonuses(current_user.account.id, amount, )
-
+			firstLevelRefs = current_user.account.referrals
+			for ref1 in firstLevelRefs:
+				parentAcc = Account.query.filter_by(id=ref1.accountId).first()
+				refProg = parentAcc.referralProgram
+				perc = int(refProg.level1)
+				refBon = ReferralBonuses(current_user.account.id, amount, float(float(amount) * perc  / 100), 1)
+				refBon.earnedAccount = parentAcc
+				db.session.add(refBon)
+				secondLevelRefs = parentAcc.referrals
+				for ref2 in secondLevelRefs:
+					parentAcc = Account.query.filter_by(id=ref2.accountId).first()
+					refProg = parentAcc.referralProgram
+					perc = refProg.level2
+					refBon = ReferralBonuses(current_user.account.id, amount, float(float(amount) * perc / 100), 2)
+					refBon.earnedAccount = parentAcc
+					db.session.add(refBon)
+					thirdLevelRefs = parentAcc.referrals
+					for ref3 in thirdLevelRefs:
+						parentAcc = Account.query.filter_by(id=ref3.accountId).first()
+						refProg = parentAcc.referralProgram
+						perc = refProg.level3
+						refBon = ReferralBonuses(current_user.account.id, amount, float(float(amount) * perc / 100), 3)
+						refBon.earnedAccount = parentAcc
+						db.session.add(refBon)
 
 			# add activity
 			dep_act = Transaction(
@@ -141,37 +164,34 @@ def activity():
 @check_confirmed
 def referrals():
 	from .. import db
-	from ..models import Referral
-	from ..models import AccountInvestments
-
-	for rb in current_user.account.referralBonuses:
-		print rb.invester_account_id
-
-	referrals = []
-	frefs = Referral.query.filter_by(accountId=current_user.account.id).all()
-	srefs = []
-	for fr in frefs:
-		srefs.extend(Referral.query.filter_by(accountId=fr.refAccId).all())
-	trefs = []
-	for sr in srefs:
-		trefs.extend(Referral.query.filter_by(accountId=sr.refAccId).all())
-	#referrals.extend(frefs)
-	#referrals.extend(srefs)
+	from ..models import Account
 
 	data = []
-
-	for ref in frefs:
-		investments = ref.referralAccount.investments
-		inv, ern = 0, 0
-		for i in investments:
-			inv += i.initialInvestment
-		ern = inv / 100 * 5
-		data.append({'username': ref.referralAccount.user.username, 
-					 'investments': inv,
-					 'earned': ern,
-					 'level' : 1})
+	for rb in current_user.account.referralBonuses:
+		invAcc = Account.query.filter_by(id=rb.invester_account_id).first()
+		data.append({'username' : invAcc.user.username,
+					 'investment': rb.invested_amount,
+					 'earned' : rb.earned_amount,
+					 'level' : rb.level,
+					 'status': rb.payed,
+					 'date' : rb.dateTime})
 
 	return render_template('profile/referrals.html', 
 							referrals=data)
 
+@userprofile.route('/wallets', methods=['GET', 'POST'])
+@login_required
+@check_confirmed
+def wallets():
+	from .. import db
+	from ..models import Wallet
+	from ..models import AccountWallets
+
+	sql_cmd = '''select wallet.id, wallet.name, account_wallets.walletValue as value
+	from wallet left join account_wallets 
+	on wallet.id = account_wallets.walletId and account_wallets.accountId = {0} '''.format(current_user.account.id)
+	wallets = db.engine.execute(sql_cmd).fetchall()
+
+	return render_template('profile/wallets.html', 
+							wallets=wallets)
 

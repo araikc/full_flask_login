@@ -7,7 +7,7 @@
 
 <div class="row">
 	<div>
-		<p><h4>YOUR REFERRAL LINK</h4> </p><input type="text" id="js-copyInput" value="{{request.host_url}}?ref={{current_user.email}}" readonly="" style="float:left">
+		<h4>YOUR REFERRAL LINK</h4><input type="text" id="js-copyInput" value="{{request.host_url}}?ref={{current_user.email}}" readonly="" style="float:left; width:300px">
 		<button class="btn btn-success btn-small" onClick="copyToClip()">Copy</button>
 	</div>
 </div>
@@ -16,17 +16,21 @@
 		<thead>
 			<tr>
 				<th>Username</th>
-				<th>Investments</th>
+				<th>Investment</th>
 				<th>Earned</th>
 				<th>Level</th>
+				<th>Status</th>
+				<th>Date</th>
 			</tr>
 		</thead>
 	{% for ref in referrals %}
 		<tr>
 			<td>{{ ref.username }}</td>
-			<td>{{ ref.investments }}</td>
+			<td>{{ ref.investment }}</td>
 			<td>{{ ref.earned }}</td>
 			<td>{{ ref.level }}</td>
+			<td>{{ ref.status }}</td>
+			<td>{{ ref.date }}</td>
 		</tr>
 	{% endfor %}
 	</table>

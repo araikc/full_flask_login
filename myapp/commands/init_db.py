@@ -68,9 +68,9 @@ def create_user(account):
 def craete_utils():
 
     # refereal program
-    rp = ReferralProgram("521")
+    rp = ReferralProgram("521", 5, 2, 1)
     db.session.add(rp)
-    rp1 = ReferralProgram("731")
+    rp1 = ReferralProgram("731", 7, 3, 1)
     db.session.add(rp1)
     #db.session.commit()
 

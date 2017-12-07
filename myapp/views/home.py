@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, session
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session, g
 from flask_login import login_user, logout_user, login_required, current_user
 from ..forms import LoginForm, RegistrationForm, RequestResetPassordForm, ResetPassordForm
 from datetime import datetime
@@ -13,6 +13,7 @@ def index():
 	if current_user.is_authenticated:
 		return redirect(url_for('userprofile.dashboard'))
 	else:
+		print g.user
 		ref = request.args.get('ref')
 		if ref != None:
 			session['referral'] = ref

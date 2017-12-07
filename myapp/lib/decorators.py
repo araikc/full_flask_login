@@ -30,7 +30,7 @@ def get_current_user_role():
 def logout_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if g.user is not None:
+        if g.user.is_authenticated:
             return redirect(request.host_url)
         return f(*args, **kwargs)
     return decorated_function

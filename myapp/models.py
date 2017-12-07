@@ -69,18 +69,23 @@ class Account(db.Model):
         self.balance = balance
         self.bitcoin = bc
 
-
 class ReferralProgram(db.Model):
     __tablename__ = "referral_programs"
 
     # 1 - 5/2/1, 2 - 7/3/1 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=False)
+    level1 = db.Column(db.Integer, nullable=True)
+    level2 = db.Column(db.Integer, nullable=True)
+    level3 = db.Column(db.Integer, nullable=True)
 
     accounts = db.relationship('Account', backref='referralProgram', lazy='dynamic')
 
-    def __init__(self, name):
+    def __init__(self, name, l1=None, l2=None, l3=None):
         self.name = name
+        self.level1 = l1
+        self.level2 = l2
+        self.level3 = l3
 
 class TransactionType(db.Model):
     __tablename__ = "transaction_types"
@@ -216,10 +221,12 @@ class ReferralBonuses(db.Model):
     invested_amount = db.Column(db.Float, nullable=False)
     earned_amount = db.Column(db.Float, nullable=False)
     level = db.Column(db.Integer, nullable=False)
+    payed = db.Column(db.Boolean, nullable=True, default=False)
+    dateTime = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
 
     def __init__(self, invAccId, amount, earned, level):
         self.invester_account_id = invAccId
-        self.invested_amount = amounts
+        self.invested_amount = amount
         self.earned_amount = earned
         self.level = level
 
