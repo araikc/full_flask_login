@@ -1,6 +1,12 @@
 {% extends "layout.html" %}
 {% block body %}
 
+<style>
+.wallets {
+	float:left;
+}
+</style>
+
 <div class="row">
 	<h1>Wallets</h1>
 </div>
@@ -8,11 +14,18 @@
 <form action="" method=post class="form-horizontal"> 
 	<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 	<div class="row">
+		<div class="">
 		{% for wallet in wallets %}
-			<div style="width:100%">
-				{{wallet.name}}<input type="text" id="{{wallet.id}}" name="{{wallet.name}}" value="{{wallet.value}}">
-			</div>
+				{% if wallet.id == 1 %}
+				<label>{{wallet.name}}</label>
+				<input type="text" id="{{wallet.id}}" name="pmwallet" value="{% if wallet.value != None %}{{wallet.value}}{% endif %}">
+				{% endif %}
+				{% if wallet.id == 2 %}
+				<label>{{wallet.name}}</label>
+				<input type="text" id="{{wallet.id}}" name="bcwallet" value="{% if wallet.value != None %}{{wallet.value}}{% endif %}">
+				{% endif %}
 		{% endfor %}
+		</div>
 	</div>
 	<div class="row">
 		<div>

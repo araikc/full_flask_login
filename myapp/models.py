@@ -107,7 +107,9 @@ class Transaction(db.Model):
     execDatetime = db.Column(db.DateTime, nullable=False)
     
     transactionTypeId = db.Column(db.Integer, db.ForeignKey('transaction_types.id'), nullable=False)
-    
+    investmentPlanId = db.Column(db.Integer, db.ForeignKey('investment_plans.id'), nullable=True)
+    paymentSystemId = db.Column(db.Integer, db.ForeignKey('payment_systems.id'), nullable=True)
+
     amount = db.Column(db.Float, nullable=True)
     status = db.Column(db.Boolean, nullable=False, default=False)
 
@@ -139,6 +141,7 @@ class InvestmentPlan(db.Model):
     description = db.Column(db.String(50), nullable=True)
 
     acountInvestments = db.relationship('AccountInvestments', backref='investmentPlan', lazy='dynamic')
+    transactions = db.relationship('Transaction', backref='investmentPlan', lazy='dynamic')
 
     def __init__(self, per, peru, perc, desc):
         self.period = per
@@ -155,6 +158,7 @@ class PaymentSystems(db.Model):
     url = db.Column(db.String(100), nullable=True)
 
     acountInvestments = db.relationship('AccountInvestments', backref='paymentSystem', lazy='dynamic')
+    transactions = db.relationship('Transaction', backref='paymentSystem', lazy='dynamic')
 
     def __init__(self, name, logo, url):
         self.name = name
@@ -174,25 +178,27 @@ class AccountInvestments(db.Model):
     endDatetime = db.Column(db.DateTime, nullable=True)
     currentBalance = db.Column(db.Integer, nullable=False)
     initialInvestment = db.Column(db.Integer, nullable=False)
-    idActive = db.Column(db.Boolean, nullable=True, default=False)
+    isActive = db.Column(db.Boolean, nullable=True, default=False)
     paymentSystemId = db.Column(db.Integer, db.ForeignKey('payment_systems.id'), nullable=False)
+    pm_batch_num = db.Column(db.Integer, nullable=False)
+    payment_unit = db.Column(db.String(10), nullable=True)
     #paymentSystem = db.relationship(PaymentSystems, backref='payment_systems')
 
     def __init__(self, 
                 currentBalance, 
-                initialInvestment, idActive, startDatetime=None, endDatetime=None):
+                initialInvestment, isActive, startDatetime=None, endDatetime=None):
         self.startDatetime = startDatetime
         self.endDatetime = endDatetime
         self.currentBalance = currentBalance
         self.initialInvestment = initialInvestment
-        self.idActive = idActive
+        self.isActive = isActive
 
 class Wallet(db.Model):
     __tablename__ = "wallet"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=True)
-    url = db.Column(db.String(70), nullable=True)
+    url = db.Column(db.String(70), nullable=True, default='')
 
     accounts =  db.relationship('AccountWallets', backref='wallet', lazy='dynamic')
 

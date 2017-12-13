@@ -1,6 +1,9 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import StringField, PasswordField, TextAreaField, SelectField, RadioField
+from wtforms import StringField, PasswordField, TextAreaField, SelectField, RadioField, TextField, FieldList, FormField
 from wtforms.validators import Email, DataRequired, EqualTo, ValidationError
+from flask_wtf.csrf import CSRFProtect
+
+csrf = CSRFProtect()
 
 class LoginForm(Form):
     email = StringField('E-mail', validators=[Email(), DataRequired()])
@@ -22,4 +25,7 @@ class DepositForm(Form):
     paymentSystemId = StringField('paymentSystemId', validators=[DataRequired()])
     amount = StringField('amount', validators=[DataRequired()])
     invPlanId = StringField('invPlanId', validators=[DataRequired()])
-    accWalletsLength = StringField('accWalletsLength', validators=[DataRequired()])
+
+class WalletsForm(Form):
+    pmwallet = StringField('pmwallet')
+    bcwallet = StringField('bcwallet')

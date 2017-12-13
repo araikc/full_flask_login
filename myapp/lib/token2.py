@@ -7,7 +7,6 @@ def generate_confirmation_token(email, config):
 
 
 def confirm_token(token, expiration=3600, config=None):
-    print 'tttttt'
     serializer = URLSafeTimedSerializer(config['SECRET_KEY'])
     try:
         email = serializer.loads(

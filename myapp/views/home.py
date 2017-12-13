@@ -13,7 +13,6 @@ def index():
 	if current_user.is_authenticated:
 		return redirect(url_for('userprofile.dashboard'))
 	else:
-		print g.user
 		ref = request.args.get('ref')
 		if ref != None:
 			session['referral'] = ref
@@ -33,7 +32,7 @@ def register():
 			referral = session['referral']
 		return render_template('home/register.html', referral=referral)
 	form = RegistrationForm(request.form)
-	if form.validate:
+	if form.validate():
 		cur = User.query.filter_by(email=form.email.data).first()
 		refUser = None
 

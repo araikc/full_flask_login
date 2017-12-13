@@ -8,6 +8,7 @@ class Config(object):
     DEBUG_TB_INTERCEPT_REDIRECTS = False
     TEMPLATES_AUTO_RELOAD = True
     SESSION_TIMEOUT = 30
+    PMSECRET = "0K6541aVFfxEepLZVwOQWJwvh"
 
 class ProductionConfig(Config):
     DEBUG = False

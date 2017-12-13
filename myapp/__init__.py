@@ -5,7 +5,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask_login import LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
-from flask_wtf.csrf import CSRFProtect
+# from flask_wtf.csrf import CSRFProtect
+from forms import csrf
 from werkzeug.contrib.fixers import ProxyFix
 from .views.home import home
 from .views.profile import userprofile
@@ -22,7 +23,7 @@ from .lib import filters
 app.config.from_object('config.DevelopConfig')
 
 # CSRFProtect
-csrf = CSRFProtect(app)
+csrf.init_app(app)
 
 # DB manager
 db = SQLAlchemy(app)
