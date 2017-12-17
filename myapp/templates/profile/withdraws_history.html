@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="row">
+	<h1>Withdraws</h1>
+</div>
+
+
+{% if sent %}
+<div class="row">
+	<h4>You have successfully sent withdraw request. Our backoffice team will withdraw to you wallet during 12 hours.</h4>
+</div>
+{% endif %}
+
+<div class="row">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>DateTime</th>
+				<th>Amount</th>
+				<th>Status</th>
+			</tr>
+		</thead>
+	{% for wd in withs %}
+		<tr>
+			<td>{{ wd.dateTime }}</td>
+			<td>{{ wd.amount }} {{wd.wallet.unit}}</td>
+			{% if wd.status == False %}
+			<td>Pending</td>
+			{% else %}
+				<td>Completed</td>
+			{% endif %}
+		</tr>
+	{% endfor %}
+	</table>
+</div>
+
+{% endblock %}

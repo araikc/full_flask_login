@@ -18,11 +18,17 @@
 		{% for wallet in wallets %}
 				{% if wallet.id == 1 %}
 				<label>{{wallet.name}}</label>
-				<input type="text" id="{{wallet.id}}" name="pmwallet" value="{% if wallet.value != None %}{{wallet.value}}{% endif %}">
+				<div class="input-append">
+					<input type="text" id="{{wallet.id}}" name="pmwallet" value="{% if wallet.value != None %}{{wallet.value}}{% endif %}">
+					<span class="add-on">{{wallet.unit}}</span>
+				</div>
 				{% endif %}
 				{% if wallet.id == 2 %}
 				<label>{{wallet.name}}</label>
-				<input type="text" id="{{wallet.id}}" name="bcwallet" value="{% if wallet.value != None %}{{wallet.value}}{% endif %}">
+				<div class="input-append">
+					<input type="text" id="{{wallet.id}}" name="bcwallet" value="{% if wallet.value != None %}{{wallet.value}}{% endif %}">
+					<span class="add-on">{{wallet.unit}}</span>
+				</div>
 				{% endif %}
 		{% endfor %}
 		</div>

@@ -29,3 +29,8 @@ class DepositForm(Form):
 class WalletsForm(Form):
     pmwallet = StringField('pmwallet')
     bcwallet = StringField('bcwallet')
+
+
+class WithdrawForm(Form):
+    accWalletId = StringField('accWalletId', validators=[DataRequired()])
+    amount = StringField('amount', validators=[DataRequired()])

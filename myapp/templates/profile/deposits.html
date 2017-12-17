@@ -21,8 +21,8 @@
 			<td>{{ inv.investmentPlan.description }}</td>
 			<td>{{ inv.startDatetime }}</td>
 			<td>{{ inv.endDatetime }}</td>
-			<td>{{ inv.initialInvestment }}</td>
-			<td>{{ inv.currentBalance }}</td>
+			<td>{{ inv.initialInvestment }} {{inv.payment_unit}}</td>
+			<td>{{ inv.currentBalance }} {{inv.payment_unit}}</td>
 		</tr>
 	{% endfor %}
 	</table>

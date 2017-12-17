@@ -74,15 +74,21 @@ def craete_utils():
     db.session.add(rp1)
     #db.session.commit()
 
-    wallet = Wallet("TestWallet", "url")
-    db.session.add(wallet)
-    #db.session.commit()
 
-    ps = PaymentSystems("Perfect money", "logo", "url")
-    db.session.add(ps)
-    ps = PaymentSystems("BitCoint", "logo", "url")
-    db.session.add(ps)
-    #db.session.commit()
+    pm = PaymentSystems("Perfect money", "logo", "url")
+    db.session.add(pm)
+    bc = PaymentSystems("BitCoint", "logo", "url")
+    db.session.add(bc)
+
+    wallet = Wallet("Perfect Money", "url")
+    wallet.paymentSystem = pm
+    wallet.unit = 'USD'
+    db.session.add(wallet)
+
+    wallet = Wallet("Perfect Money", "url")
+    wallet.paymentSystem = pm
+    wallet.unit = 'EURO'
+    db.session.add(wallet)
 
     ip = InvestmentPlan(8, 1, 8, "8% per day")
     ip1 = InvestmentPlan(14, 0, 115, "115% after 14 days")

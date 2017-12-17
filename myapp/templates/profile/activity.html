@@ -17,8 +17,18 @@
 	{% for act in acts %}
 		<tr>
 			<td>{{ act.execDatetime }}</td>
+			{% if act.transactionTypeId == 3 or act.transactionTypeId == 5 %}
+				<td>{{ act.transactionType.name }} | {{ act.amount }} {{act.unit}}</td>
+				{% if act.status == False%}
+				<td>Pending</td>
+				{% else %}
+					<td>Completed</td>
+				{% endif %}
+			{% else %}
 			<td>{{ act.transactionType.name }}</td>
-			<td>{{ act.status }}</td>
+			<td>{{act.status}}</td>
+			{% endif %}
+
 		</tr>
 	{% endfor %}
 	</table>

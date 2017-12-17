@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="row">
+
+<p>
+	<center><h3>Your deposit not completed!</h3></center>
+	<center>{{pam}}{{pu}} has not deposited to {{pyacc}}.<center>
+</p>
+
+<div class="row">
+    <a href="{{url_for('userprofile.makedeposit')}}"> Make a new deposit</a> or check your  
+    <a href="{{url_for('userprofile.deposits')}}"> Deposit history</a>
+</div>
+
+</div>
+
+{% endblock %}

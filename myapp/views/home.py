@@ -56,8 +56,8 @@ def register():
 			if form.refemail.data:
 				refUser = User.query.filter_by(email=form.refemail.data).first()
 				if refUser:
-					referral = Referral(refUser.account.id)
-					referral.referralAccount = account
+					referral = Referral(accountId=account.id)
+					referral.referralAccount = refUser.account
 					db.session.add(referral)
 
 			db.session.commit()

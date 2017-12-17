@@ -1,0 +1,16 @@
+<p>
+	<center><h3> Withdraw request </h3></center>
+	<center>We have received withdraw request from #{{account.id}} account.<center>
+	<center><h4>Wallet info</h4><center>
+	<center>Payment system: {{accW.wallet.name}}<center>
+	<center>Wallet number: {{accW.walletValue}}<center>
+	<center><h4>User info</h4><center>
+	<center>Amount requested: {{amount}}{{accW.wallet.unit}}<center>
+	<center>User current balance: 
+		{% if accW.wallet.unit == 'BTC' %}
+			{{account.bitcoin}}BTC
+		{% else %}
+			{{account.balance}}{{accW.wallet.unit}}
+		{% endif %}
+	<center>
+</p>

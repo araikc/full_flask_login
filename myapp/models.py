@@ -53,17 +53,18 @@ class Account(db.Model):
     __tablename__ = 'accounts'
 
     id = db.Column(db.Integer, primary_key=True)
-    balance = db.Column(db.Integer, nullable=False, default=0)
-    bitcoin = db.Column(db.Integer, nullable=True)
+    balance = db.Column(db.Float, nullable=False, default=0)
+    bitcoin = db.Column(db.Float, nullable=True)
     
     referralProgramId = db.Column(db.Integer, db.ForeignKey('referral_programs.id'), nullable=False)
     userId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     wallets = db.relationship('AccountWallets', backref='account', lazy='dynamic')
-    referrals = db.relationship('Referral', backref='referralAccount', lazy='dynamic')
+    inherits = db.relationship('Referral', backref='referralAccount', lazy='dynamic')
     investments = db.relationship('AccountInvestments', backref='account', lazy='dynamic')
     transactions = db.relationship('Transaction', backref='account', lazy='dynamic')
     referralBonuses = db.relationship('ReferralBonuses', backref='earnedAccount', lazy='dynamic')
+    withdraws = db.relationship('Withdraws', backref='account', lazy='dynamic')
 
     def __init__(self, balance, bc):
         self.balance = balance
@@ -111,6 +112,7 @@ class Transaction(db.Model):
     paymentSystemId = db.Column(db.Integer, db.ForeignKey('payment_systems.id'), nullable=True)
 
     amount = db.Column(db.Float, nullable=True)
+    unit   = db.Column(db.String(5), nullable=True)
     status = db.Column(db.Boolean, nullable=False, default=False)
 
     def __init__(self, date, amount, status):
@@ -159,6 +161,7 @@ class PaymentSystems(db.Model):
 
     acountInvestments = db.relationship('AccountInvestments', backref='paymentSystem', lazy='dynamic')
     transactions = db.relationship('Transaction', backref='paymentSystem', lazy='dynamic')
+    wallets = db.relationship('Wallet', backref='paymentSystem', lazy='dynamic')
 
     def __init__(self, name, logo, url):
         self.name = name
@@ -176,8 +179,8 @@ class AccountInvestments(db.Model):
     
     startDatetime = db.Column(db.DateTime, nullable=True)
     endDatetime = db.Column(db.DateTime, nullable=True)
-    currentBalance = db.Column(db.Integer, nullable=False)
-    initialInvestment = db.Column(db.Integer, nullable=False)
+    currentBalance = db.Column(db.Float, nullable=False)
+    initialInvestment = db.Column(db.Float, nullable=False)
     isActive = db.Column(db.Boolean, nullable=True, default=False)
     paymentSystemId = db.Column(db.Integer, db.ForeignKey('payment_systems.id'), nullable=False)
     pm_batch_num = db.Column(db.Integer, nullable=False)
@@ -199,8 +202,11 @@ class Wallet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=True)
     url = db.Column(db.String(70), nullable=True, default='')
+    paymentSystemId = db.Column(db.Integer, db.ForeignKey('payment_systems.id'), nullable=False)
+    unit = db.Column(db.String(5), nullable=False, default='USD')
 
     accounts =  db.relationship('AccountWallets', backref='wallet', lazy='dynamic')
+    withdraws =  db.relationship('Withdraws', backref='wallet', lazy='dynamic')
 
     def __init__(self, name, url):
         self.name = name
@@ -235,6 +241,25 @@ class ReferralBonuses(db.Model):
         self.invested_amount = amount
         self.earned_amount = earned
         self.level = level
+
+
+class Withdraws(db.Model):
+    __tablename__ = "withdraws"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    dateTime = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
+    accountId = db.Column(db.Integer, db.ForeignKey('accounts.id'), nullable=False, index=True)
+    amount = db.Column(db.Float, nullable=False)
+    walletId = db.Column(db.Integer, db.ForeignKey('wallet.id'), nullable=False, index=True)
+    status = db.Column(db.Boolean, nullable=False, default=False)
+
+    def __init__(self, dateTime, amount, walletId):
+        self.dateTime=dateTime
+        self.amount=amount
+        self.walletId=walletId
+
+
 
 
 

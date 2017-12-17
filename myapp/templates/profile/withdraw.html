@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block body %}
+
+{% if accWallets == None %}
+
+<div class="row">
+		<div class="span4">
+			<h4>Please add <a href="{{url_for('userprofile.wallets')}}"> wallets </a> into your account to be able to withdraw</h4>
+
+{% else %}
+
+<form action="{{ url_for('userprofile.confirm_withdraw') }}" method=post class="form-horizontal">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+<div class="block" style="border:1px">
+	<div class="row">
+		<div class="span4">
+			<h4>Select Wallet</h4>
+			{% for aw in  accWallets %}
+			<label class="radio">
+				<input type="radio" name="accWalletId" id="{{aw.walletId}}" value="{{aw.walletId}}" required>
+				{{aw.wallet.name}} [{{aw.wallet.unit}}]
+			</label>
+			{% endfor %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="span4">
+			<h4>Amount</h4>
+			<input name="amount" id="amount" value="" type="text" required>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="span3 offset4">
+			<button type="submit" class="btn btn-success btn-large">Withdraw</button>
+		</div>
+	</div>
+
+</div>
+</form>
+{% endif %}
+
+{% endblock %}
