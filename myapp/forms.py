@@ -34,3 +34,8 @@ class WalletsForm(Form):
 class WithdrawForm(Form):
     accWalletId = StringField('accWalletId', validators=[DataRequired()])
     amount = StringField('amount', validators=[DataRequired()])
+
+class ConfirmWithdrawForm(Form):
+    withdrawId = StringField('withdrawId', validators=[DataRequired()])
+    accWalletId = StringField('accWalletId', validators=[DataRequired()])
+    amount = StringField('amount', validators=[DataRequired()])

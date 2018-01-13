@@ -49,6 +49,9 @@ class User(db.Model):
     def get_id(self):
         return str(self.id)
 
+    def __unicode__(self):
+        return self.username or ''
+
 class Account(db.Model):
     __tablename__ = 'accounts'
 
@@ -70,6 +73,9 @@ class Account(db.Model):
         self.balance = balance
         self.bitcoin = bc
 
+    def __unicode__(self):
+        return str(self.id) or ''
+
 class ReferralProgram(db.Model):
     __tablename__ = "referral_programs"
 
@@ -87,6 +93,9 @@ class ReferralProgram(db.Model):
         self.level1 = l1
         self.level2 = l2
         self.level3 = l3
+
+    def __unicode__(self):
+        return self.name or ''
 
 class TransactionType(db.Model):
     __tablename__ = "transaction_types"
@@ -211,6 +220,9 @@ class Wallet(db.Model):
     def __init__(self, name, url):
         self.name = name
         self.url = url
+
+    def __unicode__(self):
+        return self.name or ''
 
 class AccountWallets(db.Model):
     __tablename__ = "account_wallets"

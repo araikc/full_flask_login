@@ -10,7 +10,7 @@ from forms import csrf
 from werkzeug.contrib.fixers import ProxyFix
 from .views.home import home
 from .views.profile import userprofile
-from .views.admin import MyAdminIndexView, AdminModelView
+from .views.admin import MyAdminIndexView, UserModelView, AccountModelView, WithdrawModelView
 
 import datetime
 
@@ -29,7 +29,11 @@ csrf.init_app(app)
 db = SQLAlchemy(app)
 
 from models import User
-admin.add_view(AdminModelView(User, db.session))
+admin.add_view(UserModelView(User, db.session))
+from models import Account
+admin.add_view(AccountModelView(Account, db.session))
+from models import Withdraws
+admin.add_view(WithdrawModelView(Withdraws, db.session))
 
 # Email
 mail = Mail(app)

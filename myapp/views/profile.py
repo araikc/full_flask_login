@@ -458,22 +458,20 @@ def withdraw():
 @login_required
 @check_confirmed
 def confirm_withdraw():
-
 	from .. import db
 	from .. import app
+
 	accWallets = current_user.account.wallets.all()
 
 	accWallets = None if len(accWallets) == 0 else accWallets
 
 	from ..models import AccountWallets
-	from ..models import Withdraws
-	from ..models import Transaction
-	from ..models import TransactionType
 	from ..forms import WithdrawForm
+	from ..models import TransactionType
+	from ..models import Transaction
 
 	form = WithdrawForm(request.form)
 	if form.validate():
-		from sqlalchemy import *
 		accWalletId = form.accWalletId.data.strip()
 		amount = form.amount.data.strip()
 
@@ -485,22 +483,11 @@ def confirm_withdraw():
 			flash('Please specify positive amount')
 			return render_template('profile/withdraw.html', 
 								accWallets=accWallets)
-		elif float(current_user.account.balance) > float(amount):
+		elif float(current_user.account.balance) < float(amount):
 			flash('Insufficient balance')
 			return render_template('profile/withdraw.html', 
 								accWallets=accWallets)
 		else:
-			from ..lib.email2 import send_email
-			html = render_template('home/withdraw_request_email.html', account=current_user.account, amount=amount, accW=accW)
-			subject = "New withdraw request"
-			send_email(app.config['ADMIN_EMAIL'], subject, html, app.config)
-
-			wd = Withdraws(datetime.datetime.now(), amount, accWalletId)
-			wd.account = current_user.account
-			wd.status = False
-			db.session.add(wd)
-
-
 			trType = TransactionType.query.filter_by(id=5).first()
 			dep_act = Transaction(
 									date=datetime.datetime.now(),
@@ -513,14 +500,77 @@ def confirm_withdraw():
 
 			db.session.commit()
 
-			withs = current_user.account.withdraws.all()
-			return render_template('profile/withdraws_history.html',
-								withs=withs,
-								sent=True)
+		return render_template('profile/confirm_withdraw.html', 
+								amount=amount,
+								accWallet=accW,
+								withId=dep_act.id)
+
+@userprofile.route('/make_withdraw', methods=['POST'])
+@login_required
+@check_confirmed
+def make_withdraw():
+
+	from .. import db
+	from .. import app
+	accWallets = current_user.account.wallets.all()
+
+	accWallets = None if len(accWallets) == 0 else accWallets
+
+	from ..models import AccountWallets
+	from ..models import Withdraws
+	from ..models import Transaction
+	from ..models import TransactionType
+	from ..forms import ConfirmWithdrawForm
+
+	form = ConfirmWithdrawForm(request.form)
+	if form.validate():
+		accWalletId = form.accWalletId.data.strip()
+		amount = form.amount.data.strip()
+		withdrawId = form.withdrawId.data.strip()
+
+		accW = AccountWallets.query.filter(AccountWallets.walletId==accWalletId, AccountWallets.accountId==current_user.account.id).first()
+
+		balance = current_user.account.balance if accW.wallet.unit == 'USD' or  accW.wallet.unit == 'EURO' else current_user.account.bitcoin
+
+		wd = Transaction.query.filter_by(id=withdrawId).first()
+
+		if float(amount) <= 0:
+			flash('Please specify positive amount')
+			return render_template('profile/withdraw.html', 
+								accWallets=accWallets)
+		elif float(current_user.account.balance) < float(amount):
+			flash('Insufficient balance')
+			return render_template('profile/withdraw.html', 
+								accWallets=accWallets)
+		elif wd.accountId != current_user.account.id or float(wd.amount) != float(amount) \
+			   or wd.unit != accW.wallet.unit or wd.status != False:
+			   	flash('Something goes wrong. please try agian.')
+				return render_template('profile/withdraw.html', 
+								accWallets=accWallets)
+		else:
+			from ..lib.email2 import send_email
+			html = render_template('home/withdraw_request_email.html', account=current_user.account, amount=amount, accW=accW)
+			subject = "New withdraw request"
+			send_email(app.config['ADMIN_EMAIL'], subject, html, app.config)
+
+			wd = Withdraws(datetime.datetime.now(), amount, accWalletId)
+			wd.account = current_user.account
+			wd.status = False
+			db.session.add(wd)
+
+			db.session.commit()
+
+			#withs = current_user.account.withdraws.all()
+			#return render_template('profile/withdraws_history.html',
+			#					withs=withs,
+			#					sent=True)
+			flash("You have successfully sent withdraw request. Our backoffice team will withdraw to you wallet during 12 hours.")
+			return redirect(url_for('userprofile.withdraws_history'))
 	else:
 		flash('Please recheck your input data')
 		return render_template('profile/withdraw.html', 
 				accWallets=accWallets)
+
 
 
 @userprofile.route('/withdraws_history', methods=['GET'])

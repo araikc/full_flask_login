@@ -19,85 +19,89 @@ body {
 <script src="{{ url_for('static', filename='js/vendor/bootstrap.js') }}"></script>
 <script src="{{ url_for('static', filename='js/common.js') }}"></script>
 
-<div class="navbar navbar-inverse navbar-fixed-top">
-		<div class="navbar-inner">
-			<div class="container">
-				<button type="button" class="btn btn-navbar" data-toggle="collapse"
-					data-target=".nav-collapse">
-					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-				<a class="brand" href="/">XXXApp</a>
-				<div class="nav-collapse collapse">
-					<ul class="nav">
-                        {{ nav_link('home.index', "Home") }}
-						{% if g.user.is_authenticated %}
-							{{ nav_link('userprofile.profile', "Profile") }}
-							{{ nav_link('home.logout', "Logout") }}
-						{% endif %}
-						{% if not g.user.is_authenticated %}
-							{{ nav_link('home.login', "Login") }}
-							{{ nav_link('home.register', "Register") }}
-							{{ nav_link('home.index', "About Us") }}
-						{% endif %}
-					</ul>
-				</div>
-				<!--/.nav-collapse -->
-			</div>
-		</div>
-</div>
+<div id="loading"></div>
+<div id="content">
 
-<div id="main" class="container">
-	{% with messages = get_flashed_messages() %}
-	{% if messages %}
-	  <div class="alert">
-		    <ul class="flashes">
-		    {% for message in messages %}
-		      <li>{{ message }}</li>
-		    {% endfor %}
-		    </ul>
-		</div>
-	{% endif %}
-	{% endwith %}
-
-	{% if g.user.is_authenticated  and g.user.confirmed %}
-
-
-	<div class="container-fluid">
-		<div class="row-fluid">
-			<div class="span3">
-				<ul class="nav nav-list">
-					<li class=""><a href="{{url_for('userprofile.makedeposit')}}"><i class="icon-chevron-right"></i> Make deposit</a></li>
-					<li class=""><a href="{{url_for('userprofile.deposits')}}"><i class="icon-chevron-right"></i> Deposits</a></li>
-					<li class=""><a href="{{url_for('userprofile.wallets')}}"><i class="icon-chevron-right"></i> Wallets</a></li>
-					<li class=""><a href="{{url_for('userprofile.activity')}}"><i class="icon-chevron-right"></i> Activity history</a></li>
-					<li class=""><a href="{{url_for('userprofile.referrals')}}"><i class="icon-chevron-right"></i> Refferal system</a></li>
-					<li class=""><a href="{{url_for('userprofile.withdraw')}}"><i class="icon-chevron-right"></i> Withdraw</a></li>
-					<li class=""><a href="{{url_for('userprofile.withdraws_history')}}"><i class="icon-chevron-right"></i> Withdraw history</a></li>
-					<li class=""><a href="#"><i class="icon-chevron-right"></i> Help</a></li>
-				</ul>
-			</div>
-			<div class="span9">
-				<div class="row-fluid">
-					<div class="span6 offset6">
-						<p>Balance: {{ g.user.account.balance }}$ --- 
-						BitCoin: {{ g.user.account.bitcoin }}</p>
-						<p>Total investments: {{ g_investment }}</p>
-						<p>Total earnings: {{ g_earning }}</p>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<button type="button" class="btn btn-navbar" data-toggle="collapse"
+						data-target=".nav-collapse">
+						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+							class="icon-bar"></span>
+					</button>
+					<a class="brand" href="/">XXXApp</a>
+					<div class="nav-collapse collapse">
+						<ul class="nav">
+	                        {{ nav_link('home.index', "Home") }}
+							{% if g.user.is_authenticated %}
+								{{ nav_link('userprofile.profile', "Profile") }}
+								{{ nav_link('home.logout', "Logout") }}
+							{% endif %}
+							{% if not g.user.is_authenticated %}
+								{{ nav_link('home.login', "Login") }}
+								{{ nav_link('home.register', "Register") }}
+								{{ nav_link('home.index', "About Us") }}
+							{% endif %}
+						</ul>
 					</div>
+					<!--/.nav-collapse -->
 				</div>
-				{% endif %}
-				{% block body %}{% endblock %}
-				{% if g.user.is_authenticated  and g.user.confirmed %}
 			</div>
-		</div>
 	</div>
 
-	{% endif %}
+	<div id="main" class="container">
+		{% with messages = get_flashed_messages() %}
+		{% if messages %}
+		  <div class="alert">
+			    <ul class="flashes">
+			    {% for message in messages %}
+			      <li>{{ message }}</li>
+			    {% endfor %}
+			    </ul>
+			</div>
+		{% endif %}
+		{% endwith %}
+
+		{% if g.user.is_authenticated  and g.user.confirmed %}
 
 
-	<hr>
-	<footer id="footer">
-				Some footer	
-	</footer>
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span3">
+					<ul class="nav nav-list">
+						<li class=""><a href="{{url_for('userprofile.makedeposit')}}"><i class="icon-chevron-right"></i> Make deposit</a></li>
+						<li class=""><a href="{{url_for('userprofile.deposits')}}"><i class="icon-chevron-right"></i> Deposits</a></li>
+						<li class=""><a href="{{url_for('userprofile.wallets')}}"><i class="icon-chevron-right"></i> Wallets</a></li>
+						<li class=""><a href="{{url_for('userprofile.activity')}}"><i class="icon-chevron-right"></i> Activity history</a></li>
+						<li class=""><a href="{{url_for('userprofile.referrals')}}"><i class="icon-chevron-right"></i> Refferal system</a></li>
+						<li class=""><a href="{{url_for('userprofile.withdraw')}}"><i class="icon-chevron-right"></i> Withdraw</a></li>
+						<li class=""><a href="{{url_for('userprofile.withdraws_history')}}"><i class="icon-chevron-right"></i> Withdraw history</a></li>
+						<li class=""><a href="#"><i class="icon-chevron-right"></i> Help</a></li>
+					</ul>
+				</div>
+				<div class="span9">
+					<div class="row-fluid">
+						<div class="span6 offset6">
+							<p>Balance: {{ g.user.account.balance }}$ --- 
+							BitCoin: {{ g.user.account.bitcoin }}</p>
+							<p>Total investments: {{ g_investment }}</p>
+							<p>Total earnings: {{ g_earning }}</p>
+						</div>
+					</div>
+					{% endif %}
+					{% block body %}{% endblock %}
+					{% if g.user.is_authenticated  and g.user.confirmed %}
+				</div>
+			</div>
+		</div>
+
+		{% endif %}
+
+
+		<hr>
+		<footer id="footer">
+					Some footer	
+		</footer>
+	</div>
 </div>
