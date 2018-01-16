@@ -18,6 +18,24 @@ def index():
 			session['referral'] = ref
 		return render_template('home/index.html')
 
+@home.route('/service')
+def service():
+		return render_template('home/service.html')
+
+@home.route('/about')
+def about():
+		return render_template('home/about.html')
+
+
+@home.route('/faq')
+def faq():
+		return render_template('home/faq.html')
+
+
+@home.route('/contact')
+def contact():
+		return render_template('home/contact.html')
+
 @home.route('/register' , methods=['GET','POST'])
 @logout_required
 def register():
@@ -190,7 +208,7 @@ def save_reset_pass():
 			user.password = User.hash_password(form.password.data)
 			db.session.add(user)
 			tr = Transaction(datetime.now(), None, 1)
-			tr.TransactionType = TransactionType.query.filter_by(id=6).first()
+			tr.transactionTypeId = TransactionType.query.filter_by(id=6).first().id
 			db.session.add(tr)
 			db.session.commit()
 			html = 'Thank you! You have successfully reset your password.'

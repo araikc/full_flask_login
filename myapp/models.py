@@ -112,7 +112,7 @@ class Transaction(db.Model):
     __tablename__ = "transactions"
 
     id = db.Column(db.Integer, primary_key=True)
-    accountId = db.Column(db.Integer, db.ForeignKey('accounts.id'), nullable=False)
+    accountId = db.Column(db.Integer, db.ForeignKey('accounts.id'), nullable=True)
     
     execDatetime = db.Column(db.DateTime, nullable=False)
     

@@ -42,6 +42,14 @@ class UserModelView(sqla.ModelView):
 
     column_display_pk = True
 
+    form_choices = {
+    'role': [
+        ('admin', 'admin'),
+        ('user', 'user'),
+        ]
+    }
+
+
     def scaffold_form(self):
 
         # Start with the standard form as provided by Flask-Admin. We've already told Flask-Admin to exclude the

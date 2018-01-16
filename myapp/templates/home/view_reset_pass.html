@@ -1,24 +1,47 @@
 {% extends "layout.html" %}
 {% from "home/_form_helper.html" import render_field %}
-{% block body %}
+{% block main %}
 
-  <form action="{{url_for('home.send_reset_pass')}}" method=post class="form-horizontal">
+<!--header section start-->
+<section class="breadcrumb-section contact-bg section-padding">
+  <div class="container">
+      <div class="row">
+          <div class="col-md-6 col-md-offset-3 text-center">
+              <h1>Login</h1>
+          </div>
+      </div>
+  </div>
+</section><!--Header section end-->
 
-    <p>Please specify email and we will send you a link to reset password</p>
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-    <div class="control-group">
-        <div class="controls">
-          <input type="email" id="email" name="email" class="input-xlarge"
-            placeholder="Enter email" required>
+<div class="login-section section-padding login-bg">
+  <div class="container">
+    <div class="row">
+       <div class="col-md-6 col-md-offset-3">
+         <div class="main-login main-center">
+        <a href="index.html"><img src="assets/img/logo.png" alt="Logo Image Will Be Here"></a>
+          <form action="{{url_for('home.send_reset_pass')}}" method=post class="form-horizontal">
+            <p>Please specify email and we will send you a link to reset password</p>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+            <div class="form-group">
+              <label for="email" class="cols-sm-2 control-label">Your Email</label>
+              <div class="cols-sm-10">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                  <input type="email" class="form-control" name="email" id="email"  placeholder="Enter your Email" required/>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group ">
+              <button type="submit" class="submit-btn btn btn-lg btn-block login-button">Send</button>
+            </div>
+
+          </form>
         </div>
+       </div>
     </div>
-
-    <div class="control-group">
-        <div class="controls">
-          <button type="submit" class="btn btn-success">Send</button>
-        </div>
-    </div>
-
-  </form>
+  </div>
+</div>
 
 {% endblock %}

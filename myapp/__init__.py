@@ -21,6 +21,11 @@ from .lib import filters
 
 # config
 app.config.from_object('config.DevelopConfig')
+app.config['PMSECRET'] = os.env['PMSECRET'] if app.config['PMSECRET'] == '' else app.config['PMSECRET']
+app.config['MAIL_USERNAME'] = os.env['MAIL_USERNAME'] if app.config['MAIL_USERNAME'] == '' else app.config['MAIL_USERNAME']
+app.config['MAIL_PASSWORD'] = os.env['MAIL_PASSWORD'] if app.config['MAIL_PASSWORD'] == '' else app.config['MAIL_PASSWORD']
+app.config['SQLALCHEMY_DATABASE_URI'] = os.env['SQLALCHEMY_DATABASE_URI'] if app.config['SQLALCHEMY_DATABASE_URI'] == '' else app.config['SQLALCHEMY_DATABASE_URI']
+
 
 # CSRFProtect
 csrf.init_app(app)
