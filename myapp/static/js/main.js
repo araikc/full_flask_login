@@ -12,6 +12,30 @@
         //         $(this).removeClass('active');
         //     }  
         // });
+        $(document).on('click','.left-menu-btn',function(){
+            var cname = $(this).attr('class');
+
+            $(this).removeClass('active');
+            $(this).addClass('hidden');
+            // $(this).removeClass('active');
+            $(".left-menu").addClass('hidden');
+            $(".left-menu").removeClass('active');
+
+        });
+
+        $(document).on('click','.menu-close-btn',function(){
+            var cname = $(this).attr('class');
+
+            $(this).removeClass('active');
+            $(this).addClass('hidden');
+
+            $(".left-menu").removeClass('active');
+            $(".left-menu").addClass('hidden');
+
+            $(".left-menu-btn").removeClass('hidden');
+            $(".left-menu-btn").addClass('active');
+
+        });
 		/*initialize WOW Js*/
 		new WOW().init();
         /*--change styleshet--*/

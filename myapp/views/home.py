@@ -41,7 +41,7 @@ def contact():
 def register():
 	#if 'referral' in session:
 	#	print session['referral']
-	from .. import app, db
+	from .. import application, db
 	from ..lib.email2 import send_email
 	from ..models import *
 	if request.method == 'GET':
@@ -80,11 +80,11 @@ def register():
 
 			db.session.commit()
 
-			token = generate_confirmation_token(user.email, app.config)
+			token = generate_confirmation_token(user.email, application.config)
 			confirm_url = url_for('home.confirm_email', token=token, _external=True)
 			html = render_template('home/activate_email.html', confirm_url=confirm_url)
 			subject = "Please confirm your email"
-			send_email(user.email, subject, html, app.config)
+			send_email(user.email, subject, html, application.config)
 
 			login_user(user)
 			flash('A confirmation email has been sent via email.', 'success')
@@ -144,11 +144,11 @@ def view_reset_pass():
 
 @home.route('/confirm/<token>')
 def confirm_email(token):
-	from .. import app, db
+	from .. import application, db
 	from ..models import User
 	email = None
 	try:
-		email = confirm_token(token=token, config=app.config)
+		email = confirm_token(token=token, config=application.config)
 	except Exception as e:
 	    flash('The confirmation link is invalid or has expired.', 'danger')
 	    return redirect(url_for('home.register'))
@@ -165,10 +165,10 @@ def confirm_email(token):
 
 @home.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
-	from .. import app
+	from .. import application
 	email = None
 	try:
-	    email = confirm_token(token=token, config=app.config)
+	    email = confirm_token(token=token, config=application.config)
 	except:
 	    flash('The reset password link is invalid or has expired.', 'danger')
 	    return redirect('login')
@@ -178,16 +178,16 @@ def reset_password(token):
 def send_reset_pass():
 	from ..lib.email2 import send_email
 	from ..models import User
-	from .. import app
+	from .. import application
 	form = RequestResetPassordForm(request.form)
 	if request.method == 'POST' and form.validate():
 		user = User.query.filter_by(email=form.email.data).first()
 		if user:
-			token = generate_confirmation_token(form.email.data, app.config)
+			token = generate_confirmation_token(form.email.data, application.config)
 			reset_url = url_for('home.reset_password', token=token, _external=True)
 			html = render_template('home/reset_password_email.html', reset_url=reset_url)
 			subject = "Reset password request"
-			send_email(form.email.data, subject, html, app.config)
+			send_email(form.email.data, subject, html, application.config)
 			flash('We have sent you a link for resseting password.', 'success')
 		else:
 			flash('No user found with specified email.', 'warning')
@@ -200,7 +200,7 @@ def save_reset_pass():
 	from ..models import User
 	from ..models import Transaction
 	from ..models import TransactionType
-	from .. import app, db
+	from .. import application, db
 	form = ResetPassordForm(request.form)
 	if form.validate():
 		user = User.query.filter_by(email=request.form['email']).first()
@@ -213,7 +213,7 @@ def save_reset_pass():
 			db.session.commit()
 			html = 'Thank you! You have successfully reset your password.'
 			subject = "Reset password"
-			send_email(request.form['email'], subject, html, app.config)
+			send_email(request.form['email'], subject, html, application.config)
 			flash('Thank you! You have successfully reset your password.')
 		else:
 			flash('No user found with specified email.', 'warning')
@@ -223,13 +223,13 @@ def save_reset_pass():
 @home.route('/resend')
 @login_required
 def resend_confirmation():
-	from .. import app
+	from .. import application
 	from ..lib.email2 import send_email
-	token = generate_confirmation_token(current_user.email, app.config)
+	token = generate_confirmation_token(current_user.email, application.config)
 	confirm_url = url_for('home.confirm_email', token=token, _external=True)
 	html = render_template('home/activate_email.html', confirm_url=confirm_url)
 	subject = "Please confirm your email"
-	send_email(current_user.email, subject, html, app.config)
+	send_email(current_user.email, subject, html, application.config)
 	flash('A new confirmation email has been sent.', 'success')
 	return redirect(url_for('home.unconfirmed'))
 

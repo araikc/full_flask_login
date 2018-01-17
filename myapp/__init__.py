@@ -13,25 +13,27 @@ from .views.profile import userprofile
 from .views.admin import MyAdminIndexView, UserModelView, AccountModelView, WithdrawModelView
 
 import datetime
+import os
+import appconfig
 
-app = Flask(__name__)
-admin = Admin(app, index_view=MyAdminIndexView(), base_template='admin/my_master.html', template_mode='bootstrap3')
+application = Flask(__name__)
+admin = Admin(application, index_view=MyAdminIndexView(), base_template='admin/my_master.html', template_mode='bootstrap3')
 
 from .lib import filters
 
 # config
-app.config.from_object('config.DevelopConfig')
-app.config['PMSECRET'] = os.env['PMSECRET'] if app.config['PMSECRET'] == '' else app.config['PMSECRET']
-app.config['MAIL_USERNAME'] = os.env['MAIL_USERNAME'] if app.config['MAIL_USERNAME'] == '' else app.config['MAIL_USERNAME']
-app.config['MAIL_PASSWORD'] = os.env['MAIL_PASSWORD'] if app.config['MAIL_PASSWORD'] == '' else app.config['MAIL_PASSWORD']
-app.config['SQLALCHEMY_DATABASE_URI'] = os.env['SQLALCHEMY_DATABASE_URI'] if app.config['SQLALCHEMY_DATABASE_URI'] == '' else app.config['SQLALCHEMY_DATABASE_URI']
+application.config.from_object('config.DevelopConfig')
+application.config['PMSECRET'] = os.environ['PMSECRET'] if application.config['PMSECRET'] == '' else application.config['PMSECRET']
+application.config['MAIL_USERNAME'] = os.environ['MAIL_USERNAME'] if application.config['MAIL_USERNAME'] == '' else application.config['MAIL_USERNAME']
+application.config['MAIL_PASSWORD'] = os.environ['MAIL_PASSWORD'] if application.config['MAIL_PASSWORD'] == '' else application.config['MAIL_PASSWORD']
+application.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI'] if application.config['SQLALCHEMY_DATABASE_URI'] == '' else application.config['SQLALCHEMY_DATABASE_URI']
 
 
 # CSRFProtect
-csrf.init_app(app)
+csrf.init_app(application)
 
 # DB manager
-db = SQLAlchemy(app)
+db = SQLAlchemy(application)
 
 from models import User
 admin.add_view(UserModelView(User, db.session))
@@ -41,29 +43,29 @@ from models import Withdraws
 admin.add_view(WithdrawModelView(Withdraws, db.session))
 
 # Email
-mail = Mail(app)
+mail = Mail(application)
 
 # user login
 login_manager = LoginManager()
-login_manager.init_app(app)
+login_manager.init_app(application)
 login_manager.login_view = 'home.login'
 
 # debuging
-dtb = DebugToolbarExtension(app)
+dtb = DebugToolbarExtension(application)
 
 @login_manager.user_loader
 def load_user(user_id):
 	from models import User
 	return User.query.get(user_id)
 
-@app.before_request
+@application.before_request
 def before_request():
 	session.permanent = True
-	app.permanent_session_lifetime = datetime.timedelta(minutes=app.config['SESSION_TIMEOUT'])
+	application.permanent_session_lifetime = datetime.timedelta(minutes=application.config['SESSION_TIMEOUT'])
 	session.modified = True
 	g.user = current_user
 
-@app.context_processor
+@application.context_processor
 def inject_finance():
 	from models import AccountInvestments
 	if current_user.is_authenticated:
@@ -77,9 +79,9 @@ def inject_finance():
 	return dict()
 
 # register views
-app.register_blueprint(home)
-app.register_blueprint(userprofile)
+application.register_blueprint(home)
+application.register_blueprint(userprofile)
 
-app.wsgi_app = ProxyFix(app.wsgi_app)
+application.wsgi_app = ProxyFix(application.wsgi_app)
 if __name__ == '__main__':
-  app.run()
+  application.run()

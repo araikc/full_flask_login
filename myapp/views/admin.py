@@ -94,7 +94,7 @@ class WithdrawModelView(sqla.ModelView):
         from ..models import Account
         from ..models import AccountWallets
         from .. import db
-        from .. import app
+        from .. import application
         from ..lib.email2 import send_email
         
         try:
@@ -120,7 +120,7 @@ class WithdrawModelView(sqla.ModelView):
 
                 html = render_template('home/withdraw_landed.html', account=acc, amount=w.amount, accW=accW)
                 subject = "Withdraw received"
-                send_email(acc.user.email, subject, html, app.config)
+                send_email(acc.user.email, subject, html, application.config)
 
             flash("Success: mail was sent to users about withdrawals: %s" % (str(len(wths))))
         except Exception as ex:

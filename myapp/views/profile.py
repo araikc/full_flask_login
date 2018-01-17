@@ -92,10 +92,10 @@ def confirm_deposit():
 @csrf.exempt
 def validate_deposit():
 	if request.method == 'POST':
-		from .. import app
+		from .. import application
 		import hashlib
 
-		pmsecrethash = hashlib.md5(app.config['PMSECRET']).hexdigest().upper()
+		pmsecrethash = hashlib.md5(application.config['PMSECRET']).hexdigest().upper()
 		form = request.form
 
 		req_ip = request.remote_addr
@@ -178,7 +178,7 @@ def validate_deposit():
 					from ..lib.email2 import send_email
 					html = render_template('home/deposit_success_email.html', pam=pam, pu=pu, pyacc=pyacc, pbn=pbn, pracc=pracc)
 					subject = "Congradulations! You have successfully deposited."
-					send_email(current_user.email, subject, html, app.config)
+					send_email(current_user.email, subject, html, application.config)
 
 
 @userprofile.route('/success_deposit', methods=['POST'])
@@ -200,10 +200,10 @@ def success_deposit():
 		if pyacc and pam and pu and pbn and pracc and pid and ts and v2:
 			
 			#TEMP
-			from .. import app
+			from .. import application
 			import hashlib
 
-			pmsecrethash = hashlib.md5(app.config['PMSECRET']).hexdigest().upper()
+			pmsecrethash = hashlib.md5(application.config['PMSECRET']).hexdigest().upper()
 			ver = "{0}:{1}:{2}:{3}:{4}:{5}:{6}:{7}".format(pid, pyacc, str(pam), pu, pbn, pracc, pmsecrethash, ts)
 			verhash = hashlib.md5(ver).hexdigest().upper()
 
@@ -297,7 +297,7 @@ def success_deposit():
 					from ..lib.email2 import send_email
 					html = render_template('home/deposit_success_email.html', pam=pam, pu=pu, pyacc=pyacc, pbn=pbn, pracc=pracc)
 					subject = "Congradulations! You have successfully deposited."
-					send_email(current_user.email, subject, html, app.config)
+					send_email(current_user.email, subject, html, application.config)
 
 				return render_template('profile/success_deposit.html', 
 									pyacc=pyacc,
@@ -459,7 +459,7 @@ def withdraw():
 @check_confirmed
 def confirm_withdraw():
 	from .. import db
-	from .. import app
+	from .. import application
 
 	accWallets = current_user.account.wallets.all()
 
@@ -511,7 +511,7 @@ def confirm_withdraw():
 def make_withdraw():
 
 	from .. import db
-	from .. import app
+	from .. import application
 	accWallets = current_user.account.wallets.all()
 
 	accWallets = None if len(accWallets) == 0 else accWallets
@@ -551,7 +551,7 @@ def make_withdraw():
 			from ..lib.email2 import send_email
 			html = render_template('home/withdraw_request_email.html', account=current_user.account, amount=amount, accW=accW)
 			subject = "New withdraw request"
-			send_email(app.config['ADMIN_EMAIL'], subject, html, app.config)
+			send_email(application.config['ADMIN_EMAIL'], subject, html, application.config)
 
 			wd = Withdraws(datetime.datetime.now(), amount, accWalletId)
 			wd.account = current_user.account
