@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block main %}
+
+		{% if g.user.is_authenticated  and g.user.confirmed %}
+
+		<section class="section-padding hidden-area">
+		</section>
+		<div class="container">
+		<!-- xs, sm, md, lg, xl -->
+			<div class="row">
+				<div class="col-md-3 left-menu">
+					<i class="fa fa-close pull-right menu-close-btn" style="margin:-16px"></i>
+					<ul class="nav nav-list">
+						<li class=""><a href="{{url_for('userprofile.dashboard')}}"><i class="icon-chevron-right"></i>Dashboard</a></li>
+						<li class=""><a href="{{url_for('userprofile.makedeposit')}}"><i class="icon-chevron-right"></i> Make deposit</a></li>
+						<li class=""><a href="{{url_for('userprofile.deposits')}}"><i class="icon-chevron-right"></i> Deposits</a></li>
+						<li class=""><a href="{{url_for('userprofile.wallets')}}"><i class="icon-chevron-right"></i> Wallets</a></li>
+						<li class=""><a href="{{url_for('userprofile.activity')}}"><i class="icon-chevron-right"></i> Activity history</a></li>
+						<li class=""><a href="{{url_for('userprofile.referrals')}}"><i class="icon-chevron-right"></i> Refferal system</a></li>
+						<li class=""><a href="{{url_for('userprofile.withdraw')}}"><i class="icon-chevron-right"></i> Withdraw</a></li>
+						<li class=""><a href="{{url_for('userprofile.withdraws_history')}}"><i class="icon-chevron-right"></i> Withdraw history</a></li>
+						<li class=""><a href="#"><i class="icon-chevron-right"></i> Help</a></li>
+					</ul>
+				</div>
+				<div class="left-menu-btn">
+					<i class="fa fa-delicious"></i>
+				</div>
+				<div class="col-md-9">
+					<div class="row">
+						<div class="col-sm-3 col-sm-offset-6">
+							<p>Balance: {{ g.user.account.balance }}$ --- 
+							BitCoin: {{ g.user.account.bitcoin }}</p>
+							<p>Total investments: {{ g_investment }}</p>
+							<p>Total earnings: {{ g_earning }}</p>
+						</div>
+					</div>
+					{% endif %}
+					{% block body %}{% endblock %}
+					{% if g.user.is_authenticated  and g.user.confirmed %}
+				</div>
+			</div>
+		</div>
+
+		{% endif %}
+
+{% endblock %}

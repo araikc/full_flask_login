@@ -1,46 +1,85 @@
-{% extends "layout.html" %}
-{% block main %}
 
-		{% if g.user.is_authenticated  and g.user.confirmed %}
+<!DOCTYPE html>
+<html lang="zxx">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SolarBit</title>
 
-		<section class="section-padding hidden-area">
-		</section>
-		<div class="container">
-		<!-- xs, sm, md, lg, xl -->
-			<div class="row">
-				<div class="col-md-3 left-menu">
-					<i class="fa fa-close pull-right menu-close-btn" style="margin:-16px"></i>
-					<ul class="nav nav-list">
-						<li class=""><a href="{{url_for('userprofile.dashboard')}}"><i class="icon-chevron-right"></i>Dashboard</a></li>
-						<li class=""><a href="{{url_for('userprofile.makedeposit')}}"><i class="icon-chevron-right"></i> Make deposit</a></li>
-						<li class=""><a href="{{url_for('userprofile.deposits')}}"><i class="icon-chevron-right"></i> Deposits</a></li>
-						<li class=""><a href="{{url_for('userprofile.wallets')}}"><i class="icon-chevron-right"></i> Wallets</a></li>
-						<li class=""><a href="{{url_for('userprofile.activity')}}"><i class="icon-chevron-right"></i> Activity history</a></li>
-						<li class=""><a href="{{url_for('userprofile.referrals')}}"><i class="icon-chevron-right"></i> Refferal system</a></li>
-						<li class=""><a href="{{url_for('userprofile.withdraw')}}"><i class="icon-chevron-right"></i> Withdraw</a></li>
-						<li class=""><a href="{{url_for('userprofile.withdraws_history')}}"><i class="icon-chevron-right"></i> Withdraw history</a></li>
-						<li class=""><a href="#"><i class="icon-chevron-right"></i> Help</a></li>
-					</ul>
-				</div>
-				<div class="left-menu-btn">
-					<i class="fa fa-delicious"></i>
-				</div>
-				<div class="col-md-9">
-					<div class="row">
-						<div class="col-sm-3 col-sm-offset-6">
-							<p>Balance: {{ g.user.account.balance }}$ --- 
-							BitCoin: {{ g.user.account.bitcoin }}</p>
-							<p>Total investments: {{ g_investment }}</p>
-							<p>Total earnings: {{ g_earning }}</p>
-						</div>
-					</div>
-					{% endif %}
-					{% block body %}{% endblock %}
-					{% if g.user.is_authenticated  and g.user.confirmed %}
-				</div>
-			</div>
+        <!--Favicon add-->
+    	<link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='img/fevicon.png')}}">
+        <!--bootstrap Css-->
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+        <!--Style Css-->
+        <link href="{{ url_for('static', filename='css/style.css')}}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/profile.css')}}" rel="stylesheet">
+        <!--font-awesome Css-->
+        <link href="{{ url_for('static', filename='css/font-awesome.min.css')}}" rel="stylesheet">        
+    </head>
+
+    <body>
+
+    <div class="SocialQA">
+        <ul id="socials">
+            <li><i class="fa fa-facebook"></i></li>
+            <li><i class="fa fa-twitter"></i></li>
+            <li><i class="fa fa-youtube-play"></i></li>
+        </ul>
+    </div>
+
+	<nav class="navbar navbar-default sidebar" role="navigation">
+	    <div class="container-fluid">
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-sidebar-navbar-collapse-1">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>      
+	    </div>
+	    <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+	      <ul class="nav navbar-nav">
+	        <li class="active"><a href="#">Home<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
+	        <li class="dropdown">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Usuarios <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-user"></span></a>
+	          <ul class="dropdown-menu forAnimate" role="menu">
+	            <li><a href="#">Crear</a></li>
+	            <li><a href="#">Modificar</a></li>
+	            <li><a href="#">Reportar</a></li>
+	            <li class="divider"></li>
+	            <li><a href="#">Separated link</a></li>
+	            <li class="divider"></li>
+	            <li><a href="#">Informes</a></li>
+	          </ul>
+	        </li>          
+	        <li ><a href="#">Libros<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-th-list"></span></a></li>        
+	        <li ><a href="#">Tags<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-tags"></span></a></li>
+	      </ul>
+	    </div>
+	  </div>
+	</nav>
+
+
+	{% with messages = get_flashed_messages() %}
+	{% if messages %}
+	  <div class="alert">
+		    <ul class="flashes">
+		    {% for message in messages %}
+		      <li>{{ message }}</li>
+		    {% endfor %}
+		    </ul>
 		</div>
+	{% endif %}
+	{% endwith %}
 
-		{% endif %}
 
-{% endblock %}
+    
+
+<script src="{{ url_for('static', filename='js/jquery.js')}}"></script>
+<!--Bootstrap v3 script load here-->
+<script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+<script src="{{ url_for('static', filename='js/main.js')}}"></script>
+
+</body>
+</html>
