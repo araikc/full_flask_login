@@ -146,6 +146,7 @@ body,html{
 
 .main-area {
   height: 100%;
+      background-color: #fBfbfb;
 }
 
 @media (min-width: 1200px) {
@@ -236,6 +237,73 @@ body,html{
 
 .payment-row {
   height: 70px;
+}
+
+
+
+/*==================
+Footer Section CSS
+===================*/
+.footer-bottom{
+    background: #444;
+    color: #fff;
+    width:100%;
+    position: fixed;
+    left:0px;
+    bottom:1px;
+    z-index: 1001;
+    text-align: right;
+}
+.footer-section {
+    background: #fff;
+    color: #333;
+    padding-top: 50px;
+}
+.footer-logo {
+    padding-bottom: 22px;
+}
+
+.footer-text {
+    padding-bottom: 37px;
+}
+
+.footer-social-link h3 {
+    color: #333;
+    text-transform: uppercase;
+}
+
+.footer-social-link {
+    padding-bottom: 94px;
+}
+
+.copyright-text {
+    font-weight: 300;
+    font-size: 14px;
+    padding:20px;
+    margin-bottom: 0;
+}
+.social-link i {
+    color: #fff;
+    display: inline-block;
+    padding: 5px;
+    background: #595A5B;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    padding-top: 13px;
+    border-radius: 50%;
+    transition: .5s;
+}
+
+.social-link i:hover {
+    background: #00B356;
+}
+
+.social-link {
+    padding-bottom: 24px;
+}
+.footer-logo img {
+    height: 80px;
 }
 
 

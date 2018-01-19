@@ -28,7 +28,6 @@
     </ul>
 </div>
 
-<!-- <div class="container"> -->
 	<div class="row" style="height:50px">
 		<div class="navbar navbar-fixed-top navbar-default top-navbar" role="navigation" style="clear:both">
 		    <div class="container">
@@ -70,12 +69,11 @@
 {% endif %}
 {% endwith %}
  -->
-	<!-- <div class="row"> -->
 	<div class="main-area">
 		<nav class="navbar navbar-default sidebar" role="navigation">
 		    <div class="container-fluid">
 		      <ul class="nav left-side-nav">
-		        <li {{active_link('dashboard')}}><a href="{{url_for('userprofile.dashboard')}}">Dashboard <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-th-large"></span></a></li>
+		        <li {{active_link('dashboard')}}><a href="{{url_for('userprofile.dashboard')}}">My Account <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-user"></span></a></li>
 		        <li {{active_link('makedeposit')}}><a href="{{url_for('userprofile.makedeposit')}}">Make Deposit <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-plus"></span></a></li>
 		        <li {{active_link('deposits')}}><a href="{{url_for('userprofile.deposits')}}">Deposits <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-th-list"></span></a></li>
 		        <li {{active_link('wallets')}}><a href="{{url_for('userprofile.wallets')}}">Wallets <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-credit-card"></span></a></li>
@@ -90,15 +88,38 @@
 
 		<div class="main">
 			{% block body %}{% endblock %}
+<!-- 		    <footer class="footer-section section-padding padding-bottom-0 text-center">
+		           <div class="container">
+		               <div class="row ">
+		                   <div class="col-md-6 col-md-offset-3">
+		                       <div class="footer-logo">
+		                           <a href="index.html"><img src="static/img/footer-logo.png" alt="Footer Logo"></a>
+		                       </div>
+		                       <p class="footer-text"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+		                   </div>
+		               </div>
+		               <div class="row">
+		               <div class="col-md-4 col-md-offset-4">
+		                  <div class="footer-social-link">
+		                      <h3>Follow Us on</h3>
+		                      <div class="social-link">
+		                          <a href=""><i class="fa fa-facebook"></i></a>
+		                          <a href=""><i class="fa fa-twitter"></i></a>
+		                          <a href=""><i class="fa fa-behance"></i></a>
+		                          <a href=""><i class="fa fa-instagram"></i></a>
+		                          <a href=""><i class="fa fa-pinterest"></i></a>
+		                      </div>
+		                  </div>
+		               </div>
+		               </div>
+		           </div>
+
+		    </footer> -->
 		</div>
 	</div>
-	<!-- </div> -->
-<!-- </div> -->
-
-
-
-
-    
+	<div class="footer-bottom">
+       <p class="copyright-text">COPY RIGHTS &copy; 2018. ALL RIGHTS RESERVED </p>
+   	</div>
 
 <script src="{{ url_for('static', filename='js/jquery.js')}}"></script>
 <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
