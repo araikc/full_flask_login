@@ -18,13 +18,14 @@ body,html{
 
     .main{
       position: absolute;
-      width: calc(100% - 40px); 
-      margin-left: 40px;
+      width: calc(100% - 115px); 
+      left:80px;
+      /*margin-left: 40px;*/
       float: right;
     }
 
     nav.sidebar:hover + .main{
-      margin-left: 250px;
+      margin-left: 210px;
     }
 
     nav.sidebar.navbar.sidebar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
@@ -74,7 +75,7 @@ body,html{
       margin-left: -210px;
       float: left;
       margin-bottom: 0px;
-      margin-top: 50px;
+      margin-top: 0px;
       z-index: 1000;
     }
 
@@ -91,17 +92,17 @@ body,html{
     }
   /*}*/
    
-  @media (min-width: 1200px) {
+  @media (min-width: 992px) {
 
     .main{
-      width: calc(100% - 200px);
-      margin-left: 200px;
+      width: calc(100% - 325px);
+      margin-left: 210px;
     }
 
     nav.sidebar{
       margin-left: 0px;
       float: left;
-      margin-top:50px;
+      margin-top:0px;
     }
 
     nav.sidebar .forAnimate{
@@ -144,16 +145,33 @@ body,html{
 }
 
 .main-area {
-  position:absolute;
-  left:300px;
-  top:70px;
-  width:600px;
+  height: 100%;
 }
 
-@media (max-width: 1200px) {
+@media (min-width: 1200px) {
   .main-area {
-    left:80px;
+    position:absolute;
+    left:5%;
+    width:1150px;
+    height: 100%;
+  }
+}
+
+@media (min-width: 1300px) {
+  .main-area {
+    position:absolute;
+    left:10%;
+    width:1150px;
+    height: 100%;
   }
 }
 
 
+@media (min-width: 1500px) {
+  .main-area {
+    position:absolute;
+    left:15%;
+    width:1150px;
+    height: 100%;
+  }
+}

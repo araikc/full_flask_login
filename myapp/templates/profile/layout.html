@@ -29,9 +29,9 @@
 </div>
 
 <!-- <div class="container"> -->
-	<!-- <div class="row"> -->
+	<div class="row" style="height:50px">
 		<div class="navbar navbar-fixed-top navbar-default top-navbar" role="navigation" style="clear:both">
-		    <div class="container-fluid">
+		    <div class="container">
 		        <div class="navbar-header">
 		            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 		                <span class="icon-bar"></span>
@@ -54,10 +54,10 @@
 		        </div>
 	 		</div>
 		</div> 
-	<!-- </div> -->
+	</div>
 
 
-{% with messages = get_flashed_messages() %}
+<!-- {% with messages = get_flashed_messages() %}
 {% if messages %}
   <div class="alert">
 	    <ul class="flashes">
@@ -68,29 +68,29 @@
 	</div>
 {% endif %}
 {% endwith %}
-
+ -->
 	<!-- <div class="row"> -->
-		<!-- <div class="col-md-3"> -->
-			<nav class="navbar navbar-default sidebar" role="navigation">
-			    <div class="container-fluid">
-			      <ul class="nav left-side-nav">
-			        <li {{active_link('dashboard')}}><a href="{{url_for('userprofile.dashboard')}}">Dashboard <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-th-large"></span></a></li>
-			        <li {{active_link('makedeposit')}}><a href="{{url_for('userprofile.makedeposit')}}">Make Deposit <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-plus"></span></a></li>
-			        <li {{active_link('deposits')}}><a href="{{url_for('userprofile.deposits')}}">Deposits <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-th-list"></span></a></li>
-			        <li {{active_link('wallets')}}><a href="{{url_for('userprofile.wallets')}}">Wallets <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-credit-card"></span></a></li>
-			        <li {{active_link('activity')}}><a href="{{url_for('userprofile.activity')}}">Activity history <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-road"></span></a></li>
-			        <li {{active_link('referrals')}}><a href="{{url_for('userprofile.referrals')}}">Referrals <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-bullhorn"></span></a></li>
-			        <li {{active_link('withdraw')}}><a href="{{url_for('userprofile.withdraw')}}">Withdraw <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-usd"></span></a></li>
-			        <li {{active_link('withdraws_history')}}><a href="{{url_for('userprofile.withdraws_history')}}">Withdraw history <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-calendar"></span></a></li>
-			        <li {{active_link('help')}}><a href="#">Help <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-question-sign"></span></a></li>
-			      </ul>
-			  </div>
-			</nav>
-		<!-- </div> -->
+	<div class="main-area">
+		<nav class="navbar navbar-default sidebar" role="navigation">
+		    <div class="container-fluid">
+		      <ul class="nav left-side-nav">
+		        <li {{active_link('dashboard')}}><a href="{{url_for('userprofile.dashboard')}}">Dashboard <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-th-large"></span></a></li>
+		        <li {{active_link('makedeposit')}}><a href="{{url_for('userprofile.makedeposit')}}">Make Deposit <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-plus"></span></a></li>
+		        <li {{active_link('deposits')}}><a href="{{url_for('userprofile.deposits')}}">Deposits <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-th-list"></span></a></li>
+		        <li {{active_link('wallets')}}><a href="{{url_for('userprofile.wallets')}}">Wallets <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-credit-card"></span></a></li>
+		        <li {{active_link('activity')}}><a href="{{url_for('userprofile.activity')}}">Activity history <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-road"></span></a></li>
+		        <li {{active_link('referrals')}}><a href="{{url_for('userprofile.referrals')}}">Referrals <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-bullhorn"></span></a></li>
+		        <li {{active_link('withdraw')}}><a href="{{url_for('userprofile.withdraw')}}">Withdraw <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-usd"></span></a></li>
+		        <li {{active_link('withdraws_history')}}><a href="{{url_for('userprofile.withdraws_history')}}">Withdraw history <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-calendar"></span></a></li>
+		        <li {{active_link('help')}}><a href="#">Help <span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-question-sign"></span></a></li>
+		      </ul>
+		  </div>
+		</nav>
 
-		<div class=" main-area">
+		<div class="main">
 			{% block body %}{% endblock %}
 		</div>
+	</div>
 	<!-- </div> -->
 <!-- </div> -->
 
