@@ -10,13 +10,13 @@ home = Blueprint('home', __name__)
 
 @home.route('/')
 def index():
-	if current_user.is_authenticated:
-		return redirect(url_for('userprofile.dashboard'))
-	else:
-		ref = request.args.get('ref')
-		if ref != None:
-			session['referral'] = ref
-		return render_template('home/index.html')
+	# if current_user.is_authenticated:
+	# 	return redirect(url_for('userprofile.dashboard'))
+	# else:
+	ref = request.args.get('ref')
+	if ref != None:
+		session['referral'] = ref
+	return render_template('home/index.html')
 
 @home.route('/service')
 def service():
@@ -43,7 +43,7 @@ def register():
 	#	print session['referral']
 	from .. import application, db
 	from ..lib.email2 import send_email
-	from ..models import *
+	from ..models import User, ReferralProgram, Account
 	if request.method == 'GET':
 		referral = None
 		if 'referral' in session:

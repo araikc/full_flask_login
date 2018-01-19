@@ -75,7 +75,7 @@
                         {{ nav_link('home.service', "Service") }}
                         {{ nav_link('home.faq', "FAQ") }}
                         {{ nav_link('home.contact', "Contact") }}
-                        <li><a href="#" class="btn-border">Account</a>
+                        <li><a href="{{url_for('userprofile.dashboard')}}" class="btn-border">Account</a>
                             <ul class="sub-menu">
                             	{% if g.user.is_authenticated %}
                             		{{ nav_link('home.logout', "Logout") }}

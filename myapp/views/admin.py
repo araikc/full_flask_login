@@ -93,6 +93,8 @@ class WithdrawModelView(sqla.ModelView):
         from ..models import Withdraws
         from ..models import Account
         from ..models import AccountWallets
+        from ..models import Transaction
+        from ..models import TransactionType
         from .. import db
         from .. import application
         from ..lib.email2 import send_email
@@ -112,9 +114,9 @@ class WithdrawModelView(sqla.ModelView):
                 accW = AccountWallets.query.filter_by(accountId=acc.id, walletId=w.walletId).first()
 
                 if accW.wallet.unit == 'BTC':
-                    acc.bitcoin += w.amount
+                    acc.bitcoin -= w.amount
                 else:
-                    acc.balance += w.amount
+                    acc.balance -= w.amount
                 db.session.add(acc)                    
                 db.session.commit()
 

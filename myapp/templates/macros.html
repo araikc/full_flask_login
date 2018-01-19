@@ -7,3 +7,10 @@
 <li><a href="{{ url_for(endpoint) }}">{{text}}</a></li>
 {% endif %}
 {% endmacro %}
+
+{% macro active_link(routeName) %}
+{% if request.endpoint.endswith(routeName) %}
+class="active"
+{% else %}
+{% endif %}
+{% endmacro %}

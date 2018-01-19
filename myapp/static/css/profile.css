@@ -13,7 +13,8 @@ body,html{
     padding: 10px 10px 0 10px;
   }
 
- @media (min-width: 765px) {
+
+ /*@media (min-width: 765px) {*/
 
     .main{
       position: absolute;
@@ -23,7 +24,7 @@ body,html{
     }
 
     nav.sidebar:hover + .main{
-      margin-left: 200px;
+      margin-left: 250px;
     }
 
     nav.sidebar.navbar.sidebar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
@@ -68,11 +69,12 @@ body,html{
     }
 
     nav.sidebar{
-      width: 200px;
+      width: 250px;
       height: 100%;
-      margin-left: -160px;
+      margin-left: -210px;
       float: left;
       margin-bottom: 0px;
+      margin-top: 50px;
     }
 
     nav.sidebar li {
@@ -86,9 +88,9 @@ body,html{
     .forAnimate{
       opacity: 0;
     }
-  }
+  /*}*/
    
-  @media (min-width: 1330px) {
+  @media (min-width: 1200px) {
 
     .main{
       width: calc(100% - 200px);
@@ -98,6 +100,7 @@ body,html{
     nav.sidebar{
       margin-left: 0px;
       float: left;
+      margin-top:50px;
     }
 
     nav.sidebar .forAnimate{
@@ -117,4 +120,29 @@ body,html{
     padding-left: 15px;
   }
   
+  .left-side-nav >li>a {
+    color: #777;
+  }
+
+  .left-side-nav >li.active>a {
+    color: #00B356;
+    background-color: #efeeee;
+  }
+
+  .left-side-nav  > li{
+    border-bottom: 1px #e5e5e5 solid;
+  }
+
+  .top-navbar {
+    background-color: #63cc88;
+    color:white;
+}
  
+  .top-navbar .navbar-right > li > a{
+    color:white;
+}
+
+.main-area {
+  margin-top:70px;
+  margin-left:40px;
+}
