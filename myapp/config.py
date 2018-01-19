@@ -35,7 +35,7 @@ class DevelopConfig(Config):
     MAIL_USE_SSL = True
     MAIL_USE_TLS = False
     MAIL_USERNAME = 'info@solarbit.biz'
-    MAIL_PASSWORD = 'SBBinfo@1985'
+    MAIL_PASSWORD = ''
     WTF_CSRF_SECRET_KEY = '12j1j1lk31k2312313'
     SECRET_KEY = '\x01\xc8$\x97\xd9\x1a\x13\xd9\x9eE\xabS\xc8\x17\xa4\xc3\x14\xe8Re\x94\x8cKR'
     SQLALCHEMY_DATABASE_URI = ''
