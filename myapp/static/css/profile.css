@@ -175,3 +175,67 @@ body,html{
     height: 100%;
   }
 }
+
+
+.input-value > input {
+  height: 35px;
+  border-color: #d6d6d6;
+  border-radius: 3px;
+  margin-left: -30px;
+}
+
+.pm-img {
+  width:160px;
+  height: 40px;
+  content:url("/static/img/perfectmoneylogo.png");
+}
+
+.bc-img {
+  width:160px;
+  height: 40px;
+  content:url("/static/img/bitcoinlogo.png");
+}
+
+.input-value > span {
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    color: #868886;
+}
+
+.input-value > p {
+  margin: -7px -30px 10px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  font-style: italic;
+  color: #868886;
+}
+
+@media (max-width: 600px) {
+  .pm-img {
+    content:url("/static/img/perfectmoneyicon.png");
+    /*background: url(http://127.0.0.1:5000/static/img/perfectmoneyicon.png) no-repeat;*/
+    width:30px;
+    height: 30px
+  }
+
+  .bc-img {
+    content:url("/static/img/bitcoinicon.png");
+    /*background: url(http://127.0.0.1:5000/static/img/perfectmoneyicon.png) no-repeat;*/
+    width:30px;
+    height: 30px
+  }
+ .input-value > input{
+  width:90%;
+ }
+
+}
+
+.payment-row {
+  height: 70px;
+}
+
+

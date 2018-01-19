@@ -42,13 +42,14 @@
 		        </div>
 		        <div class="collapse navbar-collapse">
 		            <ul class="nav navbar-nav navbar-right">
-		                {{ nav_link('home.index', "Home") }}
-	                    {{ nav_link('home.about', "About Us") }}
-	                    {{ nav_link('home.service', "Service") }}
+		                {{ nav_link('home.index', "HOME") }}
+	                    {{ nav_link('home.about', "ABOUT") }}
+	                    {{ nav_link('home.service', "SERVICE") }}
 	                    {{ nav_link('home.faq', "FAQ") }}
-	                    {{ nav_link('home.contact', "Contact") }}
+	                    {{ nav_link('home.contact', "CONTACT") }}
 		                {% if g.user.is_authenticated %}
-	                        {{ nav_link('home.logout', "Logout") }}
+		                	<li><a href="{{url_for('userprofile.dashboard')}}"><span style="font-size:16px;" class="pull-right  showopacity glyphicon glyphicon-user"></span> {{g.user.username}}</a>
+	                        {{ nav_link('home.logout', "LOGOUT") }}
 	                    {% endif %}
 		            </ul>
 		        </div>

@@ -1,41 +1,47 @@
 {% extends "profile/layout.html" %}
 {% block body %}
 
-<style>
-.wallets {
-	float:left;
-}
-</style>
-
 <div class="row">
-	<h1>Wallets</h1>
+	<h2 style="color:#959595">Wallets</h2>
+	<hr style="width:100%">
 </div>
 
 <form action="" method=post class="form-horizontal"> 
 	<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 	<div class="row">
-		<div class="">
 		{% for wallet in wallets %}
-				{% if wallet.id == 1 %}
-				<label>{{wallet.name}}</label>
-				<div class="input-append">
-					<input type="text" id="{{wallet.id}}" name="pmwallet" value="{% if wallet.value != None %}{{wallet.value}}{% endif %}">
-					<span class="add-on">{{wallet.unit}}</span>
+			<div class="row payment-row">
+				{% if wallet.psid == 1 %}
+				<div class="col-xs-3">
+					<img class="pm-img">
+				</div>
+				<div class="col-xs-9">
+					<div class="input-value">
+						<input type="text" id="{{wallet.id}}" name="pmwallet{{wallet.unit}}" value="{% if wallet.value != None %}{{wallet.value}}{% endif %}">
+						<span class="add-on">{{wallet.unit}}</span>
+						<p>Example: U1234567</p>
+					</div>
 				</div>
 				{% endif %}
-				{% if wallet.id == 2 %}
-				<label>{{wallet.name}}</label>
-				<div class="input-append">
-					<input type="text" id="{{wallet.id}}" name="bcwallet" value="{% if wallet.value != None %}{{wallet.value}}{% endif %}">
-					<span class="add-on">{{wallet.unit}}</span>
+				{% if wallet.psid == 2 %}																
+				<div class="col-xs-3">
+					<img class="bc-img">
+				</div>
+				<div class="col-xs-9">
+					<div class="input-value">
+						<input type="text" id="{{wallet.id}}" name="bcwallet" value="{% if wallet.value != None %}{{wallet.value}}{% endif %}">
+						<span class="add-on">{{wallet.unit}}</span>
+						<p>Example: 1BoatSLRHtKNngkdXEeobR76b53LETtpyT</p>
+					</div>
 				</div>
 				{% endif %}
+			</div>
 		{% endfor %}
-		</div>
 	</div>
 	<div class="row">
 		<div>
-			<button type="submit" class="btn btn-success">Save</button>
+			<hr style="width:100%">
+			<button type="submit" class="btn btn-success btn-lg col-xs-8" style="margin-top:40px">Save</button>
 		</div>
 	</div>
 </form>

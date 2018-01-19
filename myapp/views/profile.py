@@ -394,24 +394,27 @@ def wallets():
 	from ..models import AccountWallets
 	from ..forms import WalletsForm
 
-	sql_cmd = '''select wallet.id, wallet.name, account_wallets.walletValue as value, wallet.unit
+	sql_cmd = '''select wallet.id, wallet.name, account_wallets.walletValue as value, wallet.unit, wallet.paymentSystemId as psid
 	from wallet left join account_wallets 
 	on wallet.id = account_wallets.walletId and account_wallets.accountId = {0} '''.format(current_user.account.id)
 	wallets = db.engine.execute(sql_cmd).fetchall()
 
 	wlist = []
 	for w in wallets:
-		wlist.append({'id' : w[0], 'name': w[1], 'value': w[2], 'unit': w[3]})
+		wlist.append({'id' : w[0], 'name': w[1], 'value': w[2], 'unit': w[3], 'psid': w[4]})
 
 	if request.method == 'POST':
 		form = WalletsForm(request.form)
 		if form.validate():
-			pm = form.pmwallet.data.strip()
+			pmusd = form.pmwalletUSD.data.strip()
+			pmeuro = form.pmwalletEURO.data.strip()
 			bc = form.bcwallet.data.strip()
 			for w in wlist:
-				if w['id'] == 1:
-					www = pm
-				elif w['id'] == 2:
+				if w['psid'] == 1 and w['unit'] == 'USD':
+					www = pmusd
+				elif w['psid'] == 1 and w['unit'] == 'EURO':
+					www = pmeuro
+				elif w['psid'] == 2:
 					www = bc
 
 				wallet = Wallet.query.filter_by(id=w['id']).first()

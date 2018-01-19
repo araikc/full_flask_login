@@ -27,7 +27,8 @@ class DepositForm(Form):
     invPlanId = StringField('invPlanId', validators=[DataRequired()])
 
 class WalletsForm(Form):
-    pmwallet = StringField('pmwallet')
+    pmwalletUSD = StringField('pmwalletUSD')
+    pmwalletEURO = StringField('pmwalletEURO')
     bcwallet = StringField('bcwallet')
 
 
